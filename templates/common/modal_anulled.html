@@ -1,0 +1,49 @@
+<div x-show="modalAnulledReserve.isOpen" 
+    x-cloak
+    x-transition:enter="transition duration-300 ease-out"
+    x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
+    x-transition:enter-end="translate-y-0 opacity-100 sm:scale-100"
+    x-transition:leave="transition duration-150 ease-in"
+    x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100"
+    x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
+    class="fixed inset-0 z-10 overflow-y-auto" 
+    aria-labelledby="modal-title" role="dialog" aria-modal="true"
+>
+    <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <span class="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
+
+            <div @click.away="modalAnulledReserve.closeModal()"  class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl dark:bg-gray-900 sm:my-8 sm:w-full sm:max-w-sm sm:p-6 sm:align-middle">
+              
+                        <div class="w-full h-full text-center">
+                            <div class="flex flex-col justify-between h-full">
+                                <svg class="animate-bounce w-12 h-12 m-auto mt-4 text-indigo-500"version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path style="fill:#FFFFFF;" d="M69.818,23.273c-25.67,0-46.545,20.876-46.545,46.545v372.364c0,25.67,20.876,46.545,46.545,46.545 h372.364c25.67,0,46.545-20.876,46.545-46.545V69.818c0-25.67-20.876-46.545-46.545-46.545H69.818z"></path> <path style="fill:#4F46E5;" d="M442.182,512H69.818C31.313,512,0,480.687,0,442.182V69.818C0,31.313,31.313,0,69.818,0h372.364 C480.687,0,512,31.313,512,69.818v372.364C512,480.687,480.687,512,442.182,512z M69.818,23.273 c-25.67,0-46.545,20.876-46.545,46.545v372.364c0,25.67,20.876,46.545,46.545,46.545h372.364c25.67,0,46.545-20.876,46.545-46.545 V69.818c0-25.67-20.876-46.545-46.545-46.545H69.818z"></path> <g> <path style="fill:#4F46E5;" d="M279.273,186.182h-58.182V256h58.182c19.281,0,34.909-15.628,34.909-34.909 S298.554,186.182,279.273,186.182z"></path> <path style="fill:#4F46E5;" d="M442.182,46.545H69.818c-12.858,0-23.273,10.415-23.273,23.273v372.364 c0,12.858,10.415,23.273,23.273,23.273h372.364c12.858,0,23.273-10.415,23.273-23.273V69.818 C465.455,56.96,455.04,46.545,442.182,46.545z M279.273,302.545h-58.182v69.818h-46.545V162.909 c0-12.858,10.415-23.273,23.273-23.273h23.273h54.761c44.602,0,83.491,34.362,84.829,78.953 C362.077,264.716,325.097,302.545,279.273,302.545z"></path> </g> </g></svg>
+                                <!-- <svg xmlns="http://www.w3.org/2000/svg" class="animate-bounce w-12 h-12 m-auto mt-4 text-indigo-500" width="40" height="40" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6v13m9-13v13m9-13v13"/></svg> -->
+                                <p class="mt-4 text-xl font-bold text-gray-800 dark:text-gray-200">
+                                    Anular Reserva
+                                </p>
+                                <p class="px-6 py-2 text-xs text-gray-600 dark:text-gray-400">
+                                    Estas seguro de Anular esta Reserva ?
+                                </p>
+                                <div class="flex items-center justify-between w-full gap-4 mt-8">
+                                    <button @click.stop="modalAnulledReserve.closeModal()" type="button" class="w-full bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancelar</button>
+                                    <button @click="modalAnulledReserve.SubmitAnulled()" id="anulled-button" type="button" class="w-full ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                      <div id="spinner" class="hidden sk-chase w-[20px] h-[20px]">
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                        <div class="sk-chase-dot"></div>
+                                      </div>
+                                      <span>
+                                        Anular
+                                      </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                   
+
+            </div>
+    </div>
+</div>

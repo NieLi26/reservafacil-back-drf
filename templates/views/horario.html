@@ -1,0 +1,869 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+
+{% block header %}
+    <!-- FlatPicker -->
+    <link rel="stylesheet" href="{% static 'js/libs/flatpickr-4/flatpickr.min.css' %}" >
+   <!-- Vanilla Calendar -->
+   <link href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/themes/light.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/themes/dark.min.css" rel="stylesheet">
+{% endblock header %}
+
+
+{% block content %}
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div 
+    x-data="{
+        modalCreate: modalCreateAlpine(),
+        modalDelete: modalDeleteAlpine(),
+    }" 
+    class="px-4 sm:px-6 lg:px-8">
+    <div class="sm:flex sm:items-end mb-4">
+        <div class="sm:flex-auto">
+            <h1 class="text-2xl font-semibold text-gray-900">Listado de Horarios</h1>
+            <!-- <p class="mt-2 text-sm text-gray-700">A table of placeholder stock market data that does not make any sense.</p> -->
+        </div>
+        <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            {% for group in request.user.groups.all %}
+            {% if group.name == 'Administrador' %} 
+            <button @click="modalCreate.openModal()" class="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">Agregar</a>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <!-- <input id="vanilla-calendar" type="text"> -->
+    <div class="mt-4 flex flex-col">
+        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    {% include 'modules/horario/filters.html' %}
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead class="bg-gray-50">
+                            <tr>
+                            <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Numero</th>
+                            <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Especialista</th>
+                            <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Día</th>
+                            <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Inicio</th>
+                            <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Termino</th>
+                            <th scope="col" class="whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-gray-900">Duración</th>
+                            {% for group in request.user.groups.all %}
+                            {% if group.name == 'Administrador' %} 
+                            <th scope="col" class="relative whitespace-nowrap py-3.5 pl-3 pr-4 sm:pr-6">
+                                <span class="sr-only">Edit</span>
+                            </th>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-gray-200 bg-white"></tbody>
+                    </table>
+                    <div class="empty-result"></div>
+                    <div id="paginator-container" class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% include 'modules/horario/modal_create.html' %}
+    {% include 'modules/horario/modal_delete.html' %}
+    </div>  
+{% endblock content %}
+
+
+{% block footer %}
+    
+{% endblock footer %}
+
+
+{% block js %}
+    <!-- vanilla calendar -->
+    <script src="https://cdn.jsdelivr.net/npm/@uvarov.frontend/vanilla-calendar/build/vanilla-calendar.min.js" defer></script>
+
+   <!-- FlatPicker -->
+   <script type="text/javascript" src="{% static 'js/libs/flatpickr-4/flatpickr.min.js' %}"></script>
+   <script type="text/javascript" src="{% static 'js/libs/flatpickr-4/es.js' %}"></script>
+
+<script src="{% static 'js/helpers/getCookieCSRF.js' %}"></script>
+
+<script src="{% static 'js/services/EspecialistaAPI.js' %}"></script>
+<script src="{% static 'js/services/HorarioAPI.js' %}"></script>
+
+
+<script>
+    // ********** VARIABLES **********
+    const tableBody = document.getElementById('table-body');
+    const emptyResult = document.querySelector('.empty-result');
+    
+    // form horario
+    const formHorario = document.getElementById('form-horario');
+    const formDeleteHorario = document.getElementById('form-delete-horario');
+    const horarioObj = {
+        especialista: '',
+        dia: '',
+        inicio: '',
+        termino: '',
+        duracion: ''
+    }
+
+
+
+    // filters
+    const searchHorario = document.querySelector('#search-horario');
+    const filterOrden = document.querySelectorAll('#orden-menu [name="orden"]');
+    const btnReset = document.querySelector('#btn-reset');
+    const filterFecha = document.querySelector('#fecha-menu input');
+
+    // Paginator
+    let currentPage = 1;
+    let allPages;
+    const paginatorContainer = document.querySelector('#paginator-container');
+
+
+    // flatpciker
+    const optionsFlatPicker = {
+        mode: "range",
+        locale: "es",  // locale for this instance only
+        onChange: function(selectedDates, dateStr, instance) {
+            if ( selectedDates.length > 1 ) {
+                datosBusqueda.rangoFecha = dateStr;
+                cargarHorarios();
+                // cargarCitas();
+                // const arrayDates = dateStr.split(' a ');
+                // for ( let date of arrayDates) {
+                //    console.log(date);
+
+                // }
+            }
+        },
+    }
+    const flatPicker = flatpickr(filterFecha, optionsFlatPicker);
+
+
+    const datosBusqueda = {
+        rangoFecha: '',
+        q: '',
+        orden: ''
+    }
+
+
+    // ********** LISTENERS **********
+    eventListeners()
+    function eventListeners() {
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarHorarios();
+        });
+
+
+        // Filters
+        for (let filter of filterOrden) {
+            filter.addEventListener('click', (e) => {
+                if ( e.target.checked ) {
+                    datosBusqueda.orden = e.target.value;
+                    cargarHorarios();
+                } 
+            })
+        }
+
+        searchHorario.addEventListener('input', e => {
+            datosBusqueda.q = e.target.value;
+            setTimeout(() => {
+                cargarHorarios();
+            }, 500);
+        })
+
+        btnReset.addEventListener('click', resetearHorarios)
+
+
+        // Pagination
+        paginatorContainer.addEventListener('click', e => {
+            if ( e.target.matches('[prev-btn]') ) {
+                loadPrevious();
+                return;
+            }
+
+            if ( e.target.matches('[next-btn]') ) {
+                loadNext();
+                return;
+            }
+        })
+
+
+    }
+
+   // ********** FUNCTIONS **********
+    // Trae la data de horarios desde el servidor
+    async function cargarHorarios() {
+        args = {
+            page: currentPage,
+            rango_fecha: datosBusqueda.rangoFecha,
+            q: datosBusqueda.q,
+            orden: datosBusqueda.orden
+        };
+        const resp = await getHorarios(args);
+        const { data, paginator, paginator: { has_previous, has_next, page, total_pages } } = resp;
+
+        mostrarHorarios(data);
+        mostrarPaginacion(paginator);
+        
+        const prevBtn = document.querySelector('[prev-btn]');
+        const nextBtn = document.querySelector('[next-btn]');
+
+        if ( has_previous ) {
+            prevBtn.classList.remove('hidden');
+        } else {
+            prevBtn.classList.add('hidden');
+        }
+
+        if ( has_next ) {
+            nextBtn.classList.remove('hidden');
+        } else {
+            nextBtn.classList.add('hidden');
+        }
+
+        currentPage = parseInt(page);
+        allPages = total_pages;
+    }
+
+    // Muestra el citas en la tabla en el HTML
+    function mostrarHorarios(horarios) {
+        cleanHTML(tableBody);
+        cleanHTML(emptyResult);
+        if ( horarios.length > 0) {
+            horarios.forEach( horario => {
+
+                const optionDays = {
+                    LU: {
+                        'name': 'Lunes',
+                        'color': 'green-500'
+                    },
+                    MA: {
+                        'name': 'Martes',
+                        'color': 'red-500'
+                    },
+                    MI: {
+                        'name': 'Miercoles',
+                        'color': 'indigo-500'
+                    },
+                    JU: {
+                        'name': 'Jueves',
+                        'color': 'warning'
+                    },
+                    Vi: {
+                        'name': 'Viernes',
+                        'color': 'blue-500'
+                    },
+                    SA: {
+                        'name': 'Sabado',
+                        'color': 'blue-500'
+                    },
+                    DO: {
+                        'name': 'Domingo',
+                        'color': 'blue-500'
+                    }
+                }
+
+
+                const { id, especialista, dia, inicio, termino, duracion  } = horario
+                const tr = document.createElement('TR');
+
+                const tdNumber = document.createElement('TD');
+                tdNumber.classList = 'whitespace-nowrap px-2 py-2 text-sm text-gray-500';
+                tdNumber.textContent = id;
+                tr.appendChild(tdNumber)
+
+                const tdEspecialista = document.createElement('TD');
+                tdEspecialista.classList = 'whitespace-nowrap px-2 py-2 text-sm text-gray-500';
+                tdEspecialista.textContent = especialista.nombre;
+                tr.appendChild(tdEspecialista);
+
+                const tdDia = document.createElement('TD');
+                tdDia.classList = 'whitespace-nowrap px-2 py-2 text-sm text-gray-500';
+                tdDia.textContent = optionDays[dia].name;
+                tr.appendChild(tdDia);
+
+                const tdInicio = document.createElement('TD');
+                tdInicio.classList = 'whitespace-nowrap px-2 py-2 text-sm text-gray-500';
+                tdInicio.textContent = inicio + ' Hrs';
+                tr.appendChild(tdInicio);
+
+                const tdTermino = document.createElement('TD');
+                tdTermino.classList = 'whitespace-nowrap px-2 py-2 text-sm text-gray-500';
+                tdTermino.textContent = termino + ' Hrs';
+                tr.appendChild(tdTermino);
+
+                const tdDuracion = document.createElement('TD');
+                tdDuracion.classList = 'whitespace-nowrap px-2 py-2 text-sm text-gray-500';
+                tdDuracion.textContent = duracion + ' Min';
+                tr.appendChild(tdDuracion);
+
+              
+                const tdAction = document.createElement('TD');
+                tdAction.classList = 'relative whitespace-nowrap py-2 pl-3 pr-4 text-right text-sm font-medium sm:pr-6 space-x-2';
+
+                const btnDelete = document.createElement('BUTTON');
+                btnDelete.setAttribute('x-on:click', `modalDelete.openModal(${id})`);
+                btnDelete.classList = 'text-red-600 hover:text-red-900';
+                btnDelete.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                    </svg>
+                                    `;
+
+                const btnEdit = document.createElement('BUTTON');
+                btnEdit.setAttribute('x-on:click', `modalCreate.cargarHorario(${id})`)
+                btnEdit.classList = 'text-yellow-600 hover:text-yellow-900'
+                btnEdit.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
+                                    </svg>
+                                    `;
+                
+                {% for group in request.user.groups.all %}
+                {% if group.name == 'Administrador' %}                 
+                tdAction.appendChild(btnEdit);
+                tdAction.appendChild(btnDelete);
+                tr.appendChild(tdAction);
+                {% endif %}
+                {% endfor %}
+                tableBody.appendChild(tr);
+            })
+            return;
+        } 
+        emptyResult.innerHTML = `
+        <!-- Empty -->
+        <div class="pt-10 pb-16 sm:pt-24 sm:pb-36 text-center" style="">
+            <svg width="96" height="96" fill="none" class="mx-auto mb-6 text-gray-900">
+                <path d="M36 28.024A18.05 18.05 0 0025.022 39M59.999 28.024A18.05 18.05 0 0170.975 39" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><ellipse cx="37.5" cy="43.5" rx="4.5" ry="7.5" fill="currentColor"></ellipse><ellipse cx="58.5" cy="43.5" rx="4.5" ry="7.5" fill="currentColor"></ellipse><path d="M24.673 75.42a9.003 9.003 0 008.879 5.563m-8.88-5.562A8.973 8.973 0 0124 72c0-7.97 9-18 9-18s9 10.03 9 18a9 9 0 01-8.448 8.983m-8.88-5.562C16.919 68.817 12 58.983 12 48c0-19.882 16.118-36 36-36s36 16.118 36 36-16.118 36-36 36a35.877 35.877 0 01-14.448-3.017" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M41.997 71.75A14.94 14.94 0 0148 70.5c2.399 0 4.658.56 6.661 1.556a3 3 0 003.999-4.066 12 12 0 00-10.662-6.49 11.955 11.955 0 00-7.974 3.032c1.11 2.37 1.917 4.876 1.972 7.217z" fill="currentColor"></path>
+            </svg>
+            <p class="text-lg leading-5 font-medium text-gray-900 mb-3">Lo siento! No hay coincidencias con lo que buscas.</p>
+            <!-- <p>Si quieres intenta con otros parametros</a>. -->
+            </p>
+        </div>
+        `
+    }
+
+    function mostrarPaginacion(paginator) {
+        cleanHTML(document.querySelector('#paginator-container'));
+        const { page, total_pages, has_previous, has_next, paginate_by, total_results, start_index, end_index } = paginator;
+
+        const html = `
+
+            <div class="flex flex-1 justify-between sm:hidden">
+                <a href="#" class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
+                <a href="#" class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
+            </div>
+            <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-sm text-gray-700">
+                    Mostrando
+                    <span class="font-medium">${start_index}</span>
+                    a
+                    <span class="font-medium">${end_index}</span>
+                    de
+                    <span class="font-medium">${total_results}</span>
+                    Resultados
+                    </p>
+                </div>
+                <div>
+                    <nav class="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
+                    <button prev-btn class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                        <span class="sr-only">Previous</span>
+                        <svg class="pointer-events-none h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    ${generatePageLinks(total_pages, page)}
+                    <button next-btn class="next-btn relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                        <span class="sr-only">Next</span>
+                        <svg class="pointer-events-none h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    </nav>
+                </div>
+            </div>
+            
+            `;
+
+        document.querySelector('#paginator-container').innerHTML = html;    
+    }
+
+    function generatePageLinks(allPages, page){
+            let link = '';
+
+            let beforePages = page - 1;
+            let afterPages = page + 1;
+            let liActive;
+
+            if(page > 1){
+                // link += `
+                // <button 
+                // onclick="elem(allPages, ${page-1})" 
+                // prev-btn class="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                //     <span class="sr-only">Previous</span>
+                //     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                //     <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                //     </svg>
+                // </button>
+                // `
+                // li += `<li class="btn" onclick="elem(allPages, ${page-1})" ><i class="fas fa-angle-left"></i></li>`;
+            }
+
+            for (let pageLength = beforePages; pageLength <= afterPages; pageLength++){
+
+                if(pageLength > allPages){
+                    continue;
+                }
+                if(pageLength == 0){
+                    pageLength = pageLength + 1;
+                }
+
+                if(page == pageLength){
+                    link += `<button 
+                    onclick="loadSelectedPage(${pageLength})" 
+                    class="relative z-10 inline-flex items-center bg-indigo-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">${pageLength}</button>`
+                }else{
+                    link += `<button 
+                    onclick="loadSelectedPage(${pageLength})" 
+                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">${pageLength}</button>`;
+                }
+
+            }
+
+            if(page < allPages){
+                // link += `
+                
+                //         <button 
+                //         onclick="elem(allPages, ${page+1})" 
+                //         next-btn class="next-btn relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
+                //             <span class="sr-only">Next</span>
+                //             <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                //             <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                //             </svg>
+                //         </button>
+                // `
+                // li += `<li class="btn" onclick="elem(allPages, ${page+1})" ><i class="fas fa-angle-right"></i></li>`;
+            }
+
+            return link
+        }
+
+    function loadNext() {
+        currentPage++;
+        cargarHorarios();
+    }
+
+    function loadPrevious() {
+        currentPage--;
+        cargarHorarios();
+    }
+
+    function loadSelectedPage(page) {
+        currentPage = page;
+        cargarHorarios();
+    }
+
+    function resetearHorarios() {
+        // resetear filtros
+        datosBusqueda.rangoFecha = '';
+        datosBusqueda.q = '';
+        datosBusqueda.orden = '';
+        
+        // resetear campos
+        for ( filter of filterOrden ) {
+            filter.value === 'asc' ? filter.checked = true : filter.checked = false
+        }
+
+
+        searchHorario.value = '';
+        filterFecha.value = '';
+
+        flatPicker.clear();
+
+        currentPage = 1;
+        cargarHorarios();
+    }
+
+    // Limpiar el HTML
+    function cleanHTML(selector) {
+        while ( selector.firstChild ) {
+            selector.removeChild(selector.firstChild);
+        }
+    }
+
+    // Muestra modal para crea horario
+    function modalCreateAlpine() {
+        return {
+            isEdit: false,
+            isOpen: false,
+            closeModal() {
+                this.isOpen = false;
+                limpiarAlertas();
+            },
+            openModal() {
+                this.isOpen = true
+                this.isEdit = false;
+
+                // Cargar Select
+                this.cargarEspecialistas();
+
+                this.limpiarFormulario();
+
+
+
+                // Iniciar con boton deshabilitado y folio escondido
+                const btnSubmit = formHorario.querySelector('button[type="submit"]');
+                btnSubmit.classList.add('opacity-50');
+                btnSubmit.disabled = true;
+            },
+            // Trae la data de especialistas desde el servidor
+            async cargarEspecialistas() {                
+                const resp = await getEspecialistas();
+                const { data } = resp;
+                this.mostrarSelectEspecialista(data);
+                console.log('AUN SE PROCESA CARGA');
+            },
+            // Cargar select de especialista
+            mostrarSelectEspecialista(especialistas) {
+                const especialistaSelect =  formHorario.querySelector('#especialista')
+                cleanHTML(especialistaSelect)
+                const option = document.createElement('OPTION');
+                option.disabled = true;
+                if ( !this.isEdit ) {
+                    option.selected = true;
+                }
+                option.value = '';
+                option.textContent = 'Seleccione una Opción'
+                especialistaSelect.appendChild(option);
+                especialistas.forEach( especialista => {
+                    const { id, nombre } = especialista;
+                    const option = document.createElement('OPTION');
+                    option.value = id;
+                    option.textContent = nombre;
+                    especialistaSelect.appendChild(option);
+                })
+                console.log('AUN SE PROCESA MOSTRAR');
+            },
+            // Comprueba si el formulario esta listo para ser enviado
+            comprobarFormulario() {
+                const btnSubmit = formHorario.querySelector('button[type="submit"]');
+
+                if (Object.values(horarioObj).includes('')) {
+                    btnSubmit.classList.add('opacity-50');
+                    btnSubmit.disabled = true;
+                    return;
+                }   
+
+                btnSubmit.classList.remove('opacity-50');
+                btnSubmit.disabled = false;
+            },
+            // Agrega y validar datos pago
+            datosHorario(e) {
+                console.log(horarioObj);
+                // general
+                if (e.target.value.trim() === '') {
+                    mostrarAlerta(`El campo ${e.target.id} es obligatorio`, e.target.parentElement);
+                    horarioObj[e.target.name] = '';
+                    comprobarFormulario();
+                    return;
+                } 
+
+                limpiarAlerta(e.target.parentElement);
+
+                // asignar los valores
+                horarioObj[e.target.name] = e.target.value.trim();
+
+                // comprobar el objeto de citaObj
+                comprobarFormulario();
+            },
+            limpiarFormulario() {
+                Object.keys(horarioObj).forEach( key => {
+                    horarioObj[key] = '';
+                })
+
+                formHorario.reset()
+
+                comprobarFormulario();
+            },
+            showSpinner() {
+                const btnSubmit = formHorario.querySelector('button[type=submit]');
+                btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+                btnSubmit.classList.remove('focus:ring-2', 'focus:ring-offset-2', 'focus:ring-red-500');
+                btnSubmit.disabled = true; 
+                btnSubmit.querySelector('span').textContent = '';
+                btnSubmit.querySelector('#spinner').classList.remove('hidden');
+            },
+            hiddenSpinner() {
+                const btnSubmit = formHorario.querySelector('button[type=submit]');
+                btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnSubmit.classList.add('focus:ring-2', 'focus:ring-offset-2', 'focus:ring-red-500');
+                btnSubmit.blur();
+                btnSubmit.disabled = false; 
+                btnSubmit.querySelector('span').textContent = 'Guardar';
+                btnSubmit.querySelector('#spinner').classList.add('hidden');
+            },
+            async cargarHorario(id) {                
+                console.log(id);
+                const resp = await getHorario(id);
+                const { data } = resp;
+                this.cargarEdicion(data)
+            },
+            async cargarEdicion(horario) {
+
+                this.isOpen = true;
+                this.isEdit = true;
+     
+                // Cargar Select
+                await this.cargarEspecialistas();
+
+                const { id, especialista, dia, inicio, termino, duracion } = horario;
+                console.log('ID ESPECIALISTA ', especialista.id);
+                // poner id en formulario
+                formHorario.dataset.id = id;
+                formHorario.querySelector('#especialista').value = especialista.id;
+                horarioObj.especialista = especialista.id;
+                formHorario.querySelector('#dia').value = dia;
+                horarioObj.dia = dia;
+                formHorario.querySelector('#inicio').value = inicio;
+                horarioObj.inicio = inicio;
+                formHorario.querySelector('#termino').value = termino;
+                horarioObj.termino = termino;
+                formHorario.querySelector('#duracion').value = duracion;
+                horarioObj.duracion = duracion;
+                console.log('SE MOSTRO: ',  formHorario.querySelector('#especialista').value );
+            },
+            async submitForm() {
+                
+                this.showSpinner();
+                let resp;
+
+                if ( this.isEdit ) {
+                    const id = formHorario.dataset.id
+                    resp = await updateHorario(id, horarioObj);
+                } else {
+                    resp = await createHorario(horarioObj);
+                }
+       
+
+                if ( resp.hasOwnProperty('success') ) {
+                    Toastify({
+                        text: resp.success,
+                        duration: 2000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "right", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        style: {
+                            background: "#00b09b",
+                        },
+                        callback: () => {
+                            resetearHorarios();
+                            this.closeModal();
+                            this.hiddenSpinner();
+                            
+                        },
+                        onClick: function(){} // Callback after click
+                    }).showToast();
+                    return;
+                }
+
+                if ( resp.hasOwnProperty('error_form') ) {
+                    for ( value of Object.values(resp.error_form) ) {
+                        Toastify({
+                            text: value,
+                            duration: 3000,
+                            newWindow: true,
+                            close: true,
+                            gravity: "top", // `top` or `bottom`
+                            position: "right", // `left`, `center` or `right`
+                            stopOnFocus: true, // Prevents dismissing of toast on hover
+                            style: {
+                                background: "#E52B50",
+                            },
+                            callback: () => {
+                                this.hiddenSpinner();
+                            },
+                            onClick: function(){} // Callback after click
+                        }).showToast();
+                    }
+                    return;
+                }
+
+                console.error(resp.error);
+                Toastify({
+                    text: resp.error,
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "#E52B50",
+                    },
+                    callback: () => {
+                        this.hiddenSpinner();
+                    },
+                    onClick: function(){} // Callback after click
+                }).showToast();
+            }
+        }
+    }
+
+    // Muestra modal para eliminar horario
+    function modalDeleteAlpine() {
+        return {
+            isOpen: false,
+            closeModal() {
+                this.isOpen = false
+            },
+            openModal(id) {
+                this.isOpen = true
+                // Limpiar alerta
+                limpiarAlertas();
+        
+                const btnDelete = formDeleteHorario.querySelector('#delete-button');
+
+                // asignar data id
+                btnDelete.dataset.id = id;
+            },
+            showSpinner() {
+                const btnDelete = formDeleteHorario.querySelector('#delete-button');
+                btnDelete.classList.add('opacity-50', 'cursor-not-allowed');
+                btnDelete.classList.remove('focus:ring-2', 'focus:ring-offset-2', 'focus:ring-red-500');
+                btnDelete.disabled = true; 
+                btnDelete.querySelector('span').textContent = '';
+                btnDelete.querySelector('#spinner').classList.remove('hidden');
+            },
+            hiddenSpinner() {
+                const btnDelete = formDeleteHorario.querySelector('#delete-button');
+                btnDelete.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnDelete.classList.add('focus:ring-2', 'focus:ring-offset-2', 'focus:ring-red-500');
+                btnDelete.blur();
+                btnDelete.disabled = false; 
+                btnDelete.querySelector('span').textContent = 'Eliminar';
+                btnDelete.querySelector('#spinner').classList.add('hidden');
+            },
+            async submitForm() {
+
+                this.showSpinner();
+
+                const btnDelete = document.querySelector('#delete-button');
+
+                const resp = await deleteHorario(btnDelete.dataset.id);
+
+                if ( resp.hasOwnProperty('success') ) {
+                    Toastify({
+                        text: resp.success,
+                        duration: 2000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "right", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        style: {
+                            background: "#00b09b",
+                        },
+                        callback: () => {
+                            resetearHorarios()
+                            this.closeModal();
+                            this.hiddenSpinner();
+                        },
+                        onClick: function(){} // Callback after click
+                    }).showToast();
+                    return;
+                } 
+
+                // if ( resp.hasOwnProperty('error_form') ) {
+                //     for ( value of Object.values(resp.error_form) ) {
+                //         Toastify({
+                //             text: value,
+                //             duration: 3000,
+                //             newWindow: true,
+                //             close: true,
+                //             gravity: "top", // `top` or `bottom`
+                //             position: "right", // `left`, `center` or `right`
+                //             stopOnFocus: true, // Prevents dismissing of toast on hover
+                //             style: {
+                //                 background: "#E52B50",
+                //             },
+                //             callback: () => {
+                //                 this.hiddenSpinner();
+                //             },
+                //             onClick: function(){} // Callback after click
+                //         }).showToast();
+                //     }
+                //     return;
+                // }
+
+                console.error(resp.error);
+                Toastify({
+                    text: resp.error,
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "#E52B50",
+                    },
+                    callback: () => {
+                        this.hiddenSpinner();
+                    },
+                    onClick: function(){} // Callback after click
+                }).showToast();
+            }
+        }
+    }
+
+
+
+    // Muestra alertas de inputs
+    function mostrarAlerta(mensaje, referencia) {
+        limpiarAlerta(referencia);
+        // generar alerta en HTML
+        const error = document.createElement('P');
+        error.textContent = mensaje;
+        error.classList.add('alerta', 'mt-2', 'text-sm', 'text-red-600');
+
+        // inyectar el error al formulario
+        referencia.appendChild(error);
+    }
+
+    // Limpiar alertas de inputs
+    function limpiarAlerta(referencia) {
+        // comprueba si ya existe un alerta
+        const alerta = referencia.querySelector('.alerta');
+        if (alerta) {
+            alerta.remove();
+        }
+    }
+
+    // Limpiar todas las alertas de inputs
+    function limpiarAlertas() {
+        const alertas = document.querySelectorAll('.alerta');
+        for ( alerta of alertas ) {
+            alerta.remove();
+        }
+    }
+
+    // Comprueba si el formulario esta listo para ser enviado
+    function comprobarFormulario() {
+
+        const btnSubmit = formHorario.querySelector('button[type="submit"]');
+
+        if (Object.values(horarioObj).includes('')) {
+            btnSubmit.classList.add('opacity-50');
+            btnSubmit.disabled = true;
+            return;
+        }   
+
+        btnSubmit.classList.remove('opacity-50');
+        btnSubmit.disabled = false;
+    }
+
+
+</script>
+    
+{% endblock js %}

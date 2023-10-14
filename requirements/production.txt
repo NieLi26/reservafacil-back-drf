@@ -1,0 +1,6 @@
+-r base.txt
+
+whitenoise==6.5.0
+gunicorn==21.2.0
+django-cors-headers==4.2.0 
+argon2-cffi==23.1.0

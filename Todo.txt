@@ -1,0 +1,61 @@
+## GUIARSE EN LOS SERVICIOS DE ESPECIALIDAD PARA DEVOLVR SEGUN ESTATUS
+## poner status  de respuesta y cuando lo haga en delete poner un mensaje generico en js(LISTO)
+
+#### ALTA PRIORIDAD #####
+# restringir que no se tome la msima fecha y hora dependiendo del doctor (LISTO)
+# precargar datos si cliente esta guardado, y si se envia con el mismo rut actualizar datos (LISTO)
+# crear apartado de anular cita y generar correo de anulacion (LISTO)
+# no mostrar horarios tomados | check(revisar cuando tiene 2 horarios el mismo dia)(LISTO)
+# crear interfaz de listado de registros, tener botones para pagar y anular, abrir modales para info de cliente y motivo de cita(LISTO)
+# crear paginacion, guiarse por projecto de imagenes js, oproyecto de estacionamiento con vuejs ( LISTO)(quizas agregar busqueda especialista)
+# crear interfaz categria general y sub categoria, cliente, horario(LISTO)
+
+
+#### MEDIA PRIORIDAD #####
+# cloack a los componentes tailwind que faltan
+# mostrar hora mas proxima al previsualizar al especialista y especialidad
+# ver a que vista se le pone el si es paginado o no
+# falta accion de confirmar(LISTO)(PREGUNTAR SI PONER CONFIRMAR EN LISTADO DE CITAS)
+# confirmar con 12 horas anticipaciono sino se anula automaticamente(se debe hacer con celery y cron)
+# al eliminar que se deshabilite, en vez de borrar, y que eso provoque que deshabilite las relaciones que tiene(en vez de eliminar)
+# corregir que se vea logo en el mensaje
+# borrar algunos campos si retrocedo
+
+
+# cambiar peticiones por async await(LISTO)
+# poner mensaje con tostify a las respuestas de peticiones(LISTO)
+# FALTA bloquear botones o esconderlos mientras espero la respuesta del servidor(LISTO) (solo falta ajustar el tamano del boton)
+# al seleccionar una opcion si cambio el select que se limpie la especialidad del objeto y que se limpie el listado de especialistas(LISTO)
+# Poner el filter sidebar(LISTO)
+# modificar services de categoria, cita, especialista(LISTO)
+# crear modal para mostrar observacion(LISTO)
+# crear funcion y vista para confirmar cita(LISTO)
+# mostrar el motivo de anulacion del registro de anulacion en el listado de citas(LISTO)
+# pensar como editar y crear clientes desde su vista listado(Falta arreglar lo de reservas y probar ahi)(LISTO)
+# select al seleccionar todas las categorias(LISTO)
+# arreglar mostrar horas disponibles(LISTO)
+# evitar la colision de rango de horario(LISTO)
+# evitar hora inicio sea igual o mayor a hora termino(LISTO)
+# restringir a 3 reservas por dia por cliente (Listo)
+# reserva 24 de anticipacion(LISTO)(falta validar en el servidor que no acepte horarios sin 24 horas de anticipacion)(LISTO), 
+# restringir fechas por termino contrato especialista(traer del servidor la fecha termino contrato para restringir calendario)(listo)
+# generar registro de anulacion(Restringir en el servidor, cuando se puede)(LISTO solo anuladas restringe)(cambiar mensaje de alerta al estar vacio)(LISTO)
+# campo codigo nacional de medico, codigo especialista(LISTO)
+# generar tabla de registro anular*(los usuarios ponen motivo)(LISTO), anulacion por parte del cliente se registrar con un motivo generico.(LISTO)
+# ver formato BONO DE FONASA(LISTO)
+# correo de anulacion tmb enviada al especialista(LISTO)
+# generar pago, restringir si tiene folio o no(LISTO)
+# cambiar de pagina a detalle cuando se guarde la cita(LISTO)
+
+
+#### BAJA PRIORIDAD #####
+
+# apartado de filtrar por medico
+# agregar uuid a las reservas par la url y puede ser codigo de 5 digitos para el numero de cita
+# arreglar la fuente de las letras y agrandar botones
+# arreglar validacion de rut en reserva normal, que acepte todo tipo rut y que muestre mensaje instantaneo al escribir no al presionar y habilitar o deshabiltar boton
+
+# arreglar que se vea el metodo o estado 
+# obligar a que se escoja un rango de fecha, y no solo una fecha
+# mostrar mensaje correcto de que no hay nada en la tabla(LISTO)
+# ojo con esta linea en reserva de asignar especialidad alguna vez asigno en blanco, porque deja habilitado selecionar una opcion en el select 'citaObj.especialidad = especialidad.options[especialidad.selectedIndex].textContent;'

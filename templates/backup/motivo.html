@@ -1,0 +1,209 @@
+<div x-show="modalUpdateMotivo.isOpen" 
+    x-cloak
+    x-transition:enter="transition duration-300 ease-out"
+    x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
+    x-transition:enter-end="translate-y-0 opacity-100 sm:scale-100"
+    x-transition:leave="transition duration-150 ease-in"
+    x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100"
+    x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
+    class="fixed inset-0 z-10 overflow-y-auto" 
+    aria-labelledby="modal-title" role="dialog" aria-modal="true"
+>
+    <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <span class="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
+
+            <div @click.away="modalUpdateMotivo.closeModal()"  class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-sm sm:p-6 sm:align-middle">      
+            <div class="space-y-8">
+                <div class="relative mt-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-700"></div>
+                </div>
+                <div class="relative flex justify-center text-xl leading-5 font-extrabold">
+                    <span class="px-2 text-gray-900 bg-white">
+                        Motivo de Atención
+                    </span>
+                </div>
+                </div>
+            </div>
+                <form action="." method="post" id="form-motivo-cita" class="space-y-8 divide-y divide-gray-200" @submit.prevent="modalUpdateMotivo.submitForm()">
+                {% csrf_token %}
+                <div class="space-y-8 divide-y divide-gray-200">
+                    <div class="pt-4">
+                        <div>
+                            <h3 class="text-lg leading-6 font-medium text-gray-900">Información Personal</h3>
+                            <p class="mt-1 text-sm text-gray-500">Describe el motivo de la consulta.</p>
+                        </div>
+                        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-6">
+                                <!-- <label for="about" class="block text-sm font-medium leading-6 text-gray-900">Escribe el motivo de la consulta.</label> -->
+                                <div class="mt-2">
+                                    <textarea disabled id="motivo" name="motivo" rows="3" class="disabled:opacity-50 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                                </div>
+                                <!-- <p class="mt-3 text-sm leading-6 text-gray-600">Escribe el motivo de la consulta.</p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-5">
+                    <div class="flex">
+                    <button @click="modalUpdateMotivo.closeModal()" type="button" class="w-full bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancelar</button>
+                    <button type="submit" class="w-full ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <div id="spinner" class="hidden spinner w-[20px] h-[20px]">
+                            <div class="rect1"></div>
+                            <div class="rect2"></div>
+                            <div class="rect3"></div>
+                            <div class="rect4"></div>
+                            <div class="rect5"></div>
+                        </div>
+                        <span>
+                        Editar
+                        </span>
+                    </button>
+                    
+                    </div>
+                </div>
+                </form>
+            </div>
+    </div>
+</div>
+
+
+<script>
+            // Muestra modal para actualizar el motivo de la cita
+            function modalUpdateMotivoAlpine(e) {
+            return {
+                isEdit: false,
+                isOpen: false,
+                closeModal() {
+                    this.isOpen = false
+
+                    this.disabledEdit()
+                    // lot.value = '';
+                },
+                async openModal(id) {
+                    this.isOpen = true
+                    // reset form
+                    formMotivoCita.reset();
+                    formMotivoCita.dataset.id = id;
+
+                    const resp = await getCita(id);
+                    const { data: { motivo } } = resp;
+                    formMotivoCita.querySelector('#motivo').value = motivo;
+                },
+                showSpinner() {
+                    const btnSubmit = formMotivoCita.querySelector('button[type="submit"]');
+                    btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+                    btnSubmit.classList.remove('focus:ring-2', 'focus:ring-offset-2', 'focus:ring-green-500');
+                    btnSubmit.disabled = true; 
+                    btnSubmit.querySelector('span').textContent = '';
+                    btnSubmit.querySelector('#spinner').classList.remove('hidden');
+                },
+                hiddenSpinner() {
+                    const btnSubmit = formMotivoCita.querySelector('button[type="submit"]');
+                    btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btnSubmit.classList.add('focus:ring-2', 'focus:ring-offset-2', 'focus:ring-green-500');
+                    btnSubmit.blur();
+                    btnSubmit.disabled = false; 
+                    btnSubmit.querySelector('span').textContent = 'Guardar';
+                    btnSubmit.querySelector('#spinner').classList.add('hidden');
+                },
+                avaibleEdit() {
+                    const btnSubmit = formMotivoCita.querySelector('button[type="submit"]');
+                    btnSubmit.querySelector('span').textContent = 'Guardar';
+                    const motivo = formMotivoCita.querySelector('#motivo');
+                    motivo.disabled = false;
+                    this.isEdit = true;
+                },
+                disabledEdit() {
+                    const btnSubmit = formMotivoCita.querySelector('button[type="submit"]');
+                    btnSubmit.querySelector('span').textContent = 'Editar';
+                    const motivo = formMotivoCita.querySelector('#motivo');
+                    motivo.disabled = true;
+                    this.isEdit = false;
+                },
+                async submitForm() {
+                    console.log('entree');
+                    if ( this.isEdit ) {
+                        const motivo = formMotivoCita.querySelector('#motivo').value
+
+                        if ( motivo === '' ) {
+                            showAlert({'motivo': 'Este campo no puede estar vacio'}, 'error', formMotivoCita);
+                            return;
+                        }
+
+                        this.showSpinner();
+
+                        const id = formMotivoCita.dataset.id
+                        const resp = await updateMotivoCita(id, {motivo: motivo});
+
+                        if ( resp.hasOwnProperty('success') ) {
+
+                            const { success: { message, rut } } = resp;
+                            Toastify({
+                                text: message,
+                                duration: 2000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top", // `top` or `bottom`
+                                position: "right", // `left`, `center` or `right`
+                                stopOnFocus: true, // Prevents dismissing of toast on hover
+                                style: {
+                                    background: "#00b09b",
+                                },
+                                callback: () => {
+                                    
+                                    cleanHTML(tableBody);
+                                    cargarCitas();
+                                    this.closeModal();
+                                    this.hiddenSpinner();
+
+                                    this.disabledEdit();
+                                    // const args = {
+                                    //     rut: rut
+                                    // }
+
+                                    // const resp = await getCitas(args)
+                                    // const { data } = resp;
+                                    // mostrarCitasVigentes(data)
+                                },
+                                onClick: function(){} // Callback after click
+                            }).showToast();
+                            return;
+
+                        } 
+
+                        if ( resp.hasOwnProperty('error') ) {
+                            console.error(resp.error);
+                            Toastify({
+                                text: resp.error,
+                                duration: 3000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top", // `top` or `bottom`
+                                position: "right", // `left`, `center` or `right`
+                                stopOnFocus: true, // Prevents dismissing of toast on hover
+                                style: {
+                                    background: "#E52B50",
+                                },
+                                callback: () => {
+                                    this.hiddenSpinner();
+                                },
+                                onClick: function(){} // Callback after click
+                            }).showToast();
+                            return;
+                        }
+
+                        if ( resp.hasOwnProperty('error_form') ) {
+                            console.error(resp.error_form)
+                            showAlert(resp.error_form, 'error', formMotivoCita);
+                            this.hiddenSpinner();
+                        }
+
+                    } else {
+                        this.avaibleEdit()
+                    }
+
+                }
+            }
+        }
+</script>

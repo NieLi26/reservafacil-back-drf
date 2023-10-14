@@ -1,0 +1,1494 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block header %}
+     <!-- Vanilla Calendar -->
+     <link href="{% static 'js/libs/vanilla-calendar-2.6.1/vanilla-calendar.min.css' %}" rel="stylesheet">
+     <link href="{% static 'js/libs/vanilla-calendar-2.6.1/themes/light.min.css' %}" rel="stylesheet">
+     <link href="{% static 'js/libs/vanilla-calendar-2.6.1/themes/dark.min.css' %}" rel="stylesheet">
+{% endblock header %}
+
+{% block navbar %}
+    
+{% endblock navbar %}
+
+{% block content %}
+    <!-- This example requires Tailwind CSS v2.0+ -->
+<nav aria-label="Progress">
+    <div class="max-w-xl mx-auto pt-16 px-4 sm:pt-24 sm:px-6 md:max-w-7xl md:px-8">
+        <ol role="list" id="progressbar" class="border border-gray-300 rounded-md divide-y divide-gray-300 lg:flex lg:divide-y-0">
+            <!-- step 1 -->
+            <li class="progress-step relative lg:flex-1 lg:flex">
+                <!-- Completed Step -->
+                <a href="#" class="group flex items-center w-full">
+                <span class="px-6 py-4 flex items-center text-sm font-medium">
+                    <span class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-indigo-600 rounded-full group-hover:bg-indigo-800 text-white">
+                        1
+                    </span>
+                    <span class="ml-4 text-sm font-medium text-gray-900">Identificación</span>
+                </span>
+                </a>
+        
+                <!-- Arrow separator for lg screens and up -->
+                <div class="hidden lg:block absolute top-0 right-0 h-full w-5" aria-hidden="true">
+                <svg class="h-full w-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
+                    <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
+                </svg>
+                </div>
+            </li>
+
+            <!-- step 2 -->
+            <li class="progress-step relative lg:flex-1 lg:flex">
+                <!-- Upcoming Step -->
+                <a href="#" class="group flex items-center">
+                <span class="px-6 py-4 flex items-center text-sm font-medium">
+                    <span class="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-full group-hover:border-gray-400 text-gray-900">
+                        2
+                    </span>
+                    <span class="ml-4 text-sm font-medium text-gray-900">Selección del profesional</span>
+                </span>
+                </a>
+
+                <!-- Arrow separator for lg screens and up -->
+                <div class="hidden lg:block absolute top-0 right-0 h-full w-5" aria-hidden="true">
+                    <svg class="h-full w-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
+                        <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
+                    </svg>
+                </div>
+            </li>
+            <!-- step 3 -->
+            <li class="progress-step relative lg:flex-1 lg:flex">
+                <!-- Upcoming Step -->
+                <a href="#" class="group flex items-center">
+                <span class="px-6 py-4 flex items-center text-sm font-medium">
+                    <span class="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-full group-hover:border-gray-400 text-gray-900">
+                        3
+                    </span>
+                    <span class="ml-4 text-sm font-medium text-gray-900">Búsqueda de disponibilidad</span>
+                </span>
+                </a>
+
+                <!-- Arrow separator for lg screens and up -->
+                <div class="hidden lg:block absolute top-0 right-0 h-full w-5" aria-hidden="true">
+                    <svg class="h-full w-full text-gray-300" viewBox="0 0 22 80" fill="none" preserveAspectRatio="none">
+                        <path d="M0 -2L20 40L0 82" vector-effect="non-scaling-stroke" stroke="currentcolor" stroke-linejoin="round" />
+                    </svg>
+                </div>
+            </li>
+            <!-- step 4 -->
+            <li class="progress-step relative lg:flex-1 lg:flex">
+                <!-- Upcoming Step -->
+                <a href="#" class="group flex items-center">
+                <span class="px-6 py-4 flex items-center text-sm font-medium">
+                    <span class="flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-full group-hover:border-gray-400 text-gray-900">
+                        4
+                    </span>
+                    <span class="ml-4 text-sm font-medium text-gray-900">Confirmación</span>
+                </span>
+                </a>
+            </li>
+        </ol>
+
+        <!-- Be sure to use this with a layout container that is full-width on mobile -->
+        <div class="bg-white overflow-hidden shadow sm:rounded-lg md:max-w-7xl max-w-xl">
+            <div class="px-4 py-5 sm:p-6">
+            <!-- Content goes here -->
+                <form method="post" id="multi-form-step">
+                    {% csrf_token %}
+                    <!-- step 1 -->
+                    <div id="rut-screen" class="form-step max-w-md mx-auto">
+                        <div class="py-5 flex justify-between items-center">
+                            <div>
+                                <p class="text-gray-700 dark:text-gray-300 md:text-lg">Reserva de </p>
+                                <h1 class="text-2xl font-medium text-gray-800 capitalize lg:text-3xl ">
+                                    Horas
+                                </h1>
+                            </div>
+                        <svg width="64px" height="64px" viewBox="0 0 120 120" id="Layer_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:#F9F9F9;} .st1{fill:#77D6FF;} .st2{fill:#60C0E2;} .st3{fill:#DEF4FF;} .st4{fill:#FFDB86;} .st5{fill:#F27D75;} .st6{fill:#FCE5B9;} .st7{fill:#A4E7FF;} </style> <g> <path class="st0" d="M17.1,107.4h85.7V39.7c0-10-8.1-18.1-18.1-18.1H35.2c-10,0-18.1,8.1-18.1,18.1V107.4z"></path> <path class="st1" d="M17.1,38.5v8.3h85.7v-8.3c0-9.3-7.6-16.9-16.9-16.9H34C24.7,21.6,17.1,29.2,17.1,38.5z"></path> <g> <ellipse class="st2" cx="42" cy="34.9" rx="5.3" ry="5.3" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -12.3403 39.9119)"></ellipse> <ellipse class="st2" cx="60" cy="34.9" rx="5.3" ry="5.3" transform="matrix(0.9732 -0.2298 0.2298 0.9732 -6.4023 14.7176)"></ellipse> <ellipse class="st2" cx="78" cy="34.9" rx="5.3" ry="5.3" transform="matrix(0.9732 -0.2298 0.2298 0.9732 -5.921 18.8514)"></ellipse> </g> <g> <path class="st3" d="M42,12.6c-2.1,0-3.9,1.7-3.9,3.9v16.6c0,2.1,1.7,3.9,3.9,3.9s3.9-1.7,3.9-3.9V16.5 C45.9,14.4,44.1,12.6,42,12.6z"></path> <path class="st3" d="M78,12.6c-2.1,0-3.9,1.7-3.9,3.9v16.6c0,2.1,1.7,3.9,3.9,3.9s3.9-1.7,3.9-3.9V16.5 C81.9,14.4,80.1,12.6,78,12.6z"></path> <path class="st3" d="M60,12.6c-2.1,0-3.9,1.7-3.9,3.9v16.6c0,2.1,1.7,3.9,3.9,3.9s3.9-1.7,3.9-3.9V16.5 C63.9,14.4,62.1,12.6,60,12.6z"></path> </g> <g> <path class="st4" d="M84.5,95.7l-6.8,6c-0.5,0.5-1.4,0.1-1.5-0.6L75.4,92c0-0.1,0-0.3,0.1-0.4l14.2-35.1c0.2-0.5,0.7-0.7,1.2-0.5 l7.6,3.1c0.5,0.2,0.7,0.7,0.5,1.2L84.7,95.3C84.7,95.5,84.6,95.6,84.5,95.7z"></path> <path class="st5" d="M95.5,68.7l-9.2-3.7l3.1-7.6c0.4-0.9,1.4-1.3,2.3-1l6,2.4c0.9,0.4,1.3,1.4,1,2.3L95.5,68.7z"></path> <path class="st6" d="M84.7,95.3L84.7,95.3c-0.1,0.2-0.2,0.3-0.3,0.4l-6.8,6.1c-0.5,0.5-1.4,0.1-1.5-0.6L75.4,92 c0-0.1,0-0.3,0.1-0.4l0-0.1L84.7,95.3z"></path> </g> <g> <rect class="st5" height="8.3" width="13.1" x="63.9" y="57"></rect> <rect class="st5" height="8.3" width="13.1" x="63.9" y="70.4"></rect> </g> <g> <rect class="st7" height="8.3" width="13.1" x="27.2" y="57"></rect> <rect class="st7" height="8.3" width="13.1" x="45.9" y="57"></rect> <rect class="st7" height="8.3" width="13.1" x="27.2" y="70.4"></rect> <rect class="st7" height="8.3" width="13.1" x="45.9" y="70.4"></rect> <rect class="st7" height="8.3" width="13.1" x="27.2" y="83.8"></rect> <rect class="st7" height="8.3" width="13.1" x="45.9" y="83.8"></rect> </g> </g> </g></svg>                        </div>
+                        <div x-data class="flex flex-col mb-2">
+                            <div class=" relative ">
+                            <label for="rut" class="sr-only">Rut</label>
+                            <input x-mask="99999999-*" id="rut" name="rut" type="text" autocomplete="rut" required class="rounded-lg border-transparent flex-1 appearance-none border border-indigo-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent" placeholder="Ingrese Rut Paciente Ej: 17605812-2">
+                            </div>
+                        </div>
+                        <div class="flex w-full my-4">
+                            <button type="button" class="btn-next py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+                                Siguiente
+                            </button>
+                        </div>
+                        <div class="py-2 text-left">
+                            <p>
+                                Tambien puede
+                                <a id="view-hours" href="#" class="font-semibold hover:underline">
+                                    Ver o Anular sus Reservas.
+                                </a>
+                            </p>
+                        </div>
+                        <!-- <div x-data class="mt-8 sm:flex justify-center items-center flex-col w-full">
+                            <label for="rut" class="sr-only">Rut</label>
+                            <input x-mask="99999999-*" id="rut" name="rut" type="rut" autocomplete="rut" required class="flex-grow w-full px-5 py-2 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs border-gray-300 rounded-md" placeholder="Ingrese Rut Paciente Ej: 17605812-2">
+                        </div>
+                        <div class="mt-3 rounded-md shadow sm:mt-0  sm:flex-shrink-0 max-w-lg">
+                            <button type="button" class="btn-next w-full flex items-center justify-center px-5 py-2 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Ingresar</button>
+                          </div> -->
+                           
+                    </div>
+                    <!-- step review reserves -->
+                    <div id="rut-screen-horas" class="hidden mx-auto">
+                        <div class="search max-w-md mx-auto">
+                            <div class="py-5 flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-700 dark:text-gray-300 md:text-lg">Mis Horas </p>
+                                    <h1 class="text-2xl font-medium text-gray-800 capitalize lg:text-3xl ">
+                                        Vigentes
+                                    </h1>
+                                </div>
+                                <svg width="64px" height="64px" viewBox="0 0 120 120" id="Layer_1" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <style type="text/css"> .st0{fill:#FFF2F2;} .st1{fill:#F47C7C;} .st2{fill:#D66767;} .st3{fill:#FCA4A4;} .st4{fill:#8AAEFF;} .st5{fill:#658FDB;} </style> <g> <g> <path class="st0" d="M23.4,100.7h73.1c4.1,0,7.3-3.3,7.3-7.3V31.1c0-4.1-3.3-7.3-7.3-7.3H23.4c-4.1,0-7.3,3.3-7.3,7.3v62.2 C16.1,97.4,19.4,100.7,23.4,100.7z"></path> <path class="st1" d="M103.9,30.8v15.1H16.1V30.8c0-3.9,3.2-7,7-7h73.7C100.7,23.7,103.9,26.9,103.9,30.8z"></path> <g> <circle class="st2" cx="38.9" cy="34.8" r="3.6"></circle> <circle class="st2" cx="60" cy="34.8" r="3.6"></circle> <circle class="st2" cx="81.1" cy="34.8" r="3.6"></circle> </g> <g> <path class="st0" d="M39.9,19.3h-2c-0.6,0-1.1,0.5-1.1,1.1v13.9c0,0.6,0.5,1.1,1.1,1.1h2c0.6,0,1.1-0.5,1.1-1.1V20.5 C41.1,19.8,40.5,19.3,39.9,19.3z"></path> <path class="st0" d="M61,19.3h-2c-0.6,0-1.1,0.5-1.1,1.1v13.9c0,0.6,0.5,1.1,1.1,1.1h2c0.6,0,1.1-0.5,1.1-1.1V20.5 C62.1,19.8,61.6,19.3,61,19.3z"></path> <path class="st0" d="M82.1,19.3h-2c-0.6,0-1.1,0.5-1.1,1.1v13.9c0,0.6,0.5,1.1,1.1,1.1h2c0.6,0,1.1-0.5,1.1-1.1V20.5 C83.2,19.8,82.7,19.3,82.1,19.3z"></path> </g> <g> <path class="st3" d="M40.9,56h-8.6c-1,0-1.8,0.8-1.8,1.8v8.6c0,1,0.8,1.8,1.8,1.8h8.6c1,0,1.8-0.8,1.8-1.8v-8.6 C42.8,56.9,42,56,40.9,56z"></path> <path class="st3" d="M64.3,56h-8.6c-1,0-1.8,0.8-1.8,1.8v8.6c0,1,0.8,1.8,1.8,1.8h8.6c1,0,1.8-0.8,1.8-1.8v-8.6 C66.2,56.9,65.3,56,64.3,56z"></path> <path class="st3" d="M87.7,56h-8.6c-1,0-1.8,0.8-1.8,1.8v8.6c0,1,0.8,1.8,1.8,1.8h8.6c1,0,1.8-0.8,1.8-1.8v-8.6 C89.5,56.9,88.7,56,87.7,56z"></path> <path class="st3" d="M40.9,78.7h-8.6c-1,0-1.8,0.8-1.8,1.8v8.6c0,1,0.8,1.8,1.8,1.8h8.6c1,0,1.8-0.8,1.8-1.8v-8.6 C42.8,79.5,42,78.7,40.9,78.7z"></path> <path class="st3" d="M64.3,78.7h-8.6c-1,0-1.8,0.8-1.8,1.8v8.6c0,1,0.8,1.8,1.8,1.8h8.6c1,0,1.8-0.8,1.8-1.8v-8.6 C66.2,79.5,65.3,78.7,64.3,78.7z"></path> <path class="st3" d="M87.7,78.7h-8.6c-1,0-1.8,0.8-1.8,1.8v8.6c0,1,0.8,1.8,1.8,1.8h8.6c1,0,1.8-0.8,1.8-1.8v-8.6 C89.5,79.5,88.7,78.7,87.7,78.7z"></path> </g> </g> <circle class="st4" cx="89.5" cy="86.9" r="19.2"></circle> <circle class="st5" cx="89.5" cy="86.9" r="16.1"></circle> <path class="st0" d="M91.5,83.6v-8c0-1.1-0.9-2-2-2s-2,0.9-2,2v8c-0.6,0.3-1,0.8-1.4,1.4h-4.5c-1.1,0-2,0.9-2,2s0.9,2,2,2h4.5 c0.7,1.2,1.9,1.9,3.4,1.9c2.2,0,3.9-1.8,3.9-3.9C93.4,85.5,92.7,84.3,91.5,83.6z M89.5,88.9c-1.1,0-1.9-0.9-1.9-1.9 s0.9-1.9,1.9-1.9s1.9,0.9,1.9,1.9S90.6,88.9,89.5,88.9z"></path> </g> </g></svg>                        
+                            </div>
+                            <div x-data class="flex flex-col mb-2">
+                                <div class=" relative ">
+                                <label for="rut-horas" class="sr-only">Rut</label>
+                                <input x-mask="99999999-*" id="rut-horas" name="rut-horas" type="text" autocomplete="rut-horas" class="rounded-lg border-transparent flex-1 appearance-none border border-indigo-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent" placeholder="Ingrese Rut Paciente Ej: 17605812-2">
+                                </div>
+                            </div>
+                            <div class="flex w-full my-4">
+                                <button id="btn-horas" type="button" class="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg ">
+                                    Siguiente
+                                </button>
+                            </div>
+                            <div class="py-2 text-left">
+                                <p>
+                                    Tambien puede
+                                    <a id="view-reserve" href="#" class="font-semibold hover:underline">
+                                        Reservar Horas.
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div id="listado-citas" class="max-w-2xl mx-auto pt-4">
+                          
+                        </div>
+                    </div>
+                    <!-- step 2 -->
+                    <div class="form-step hidden">
+                        <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
+                            <div class="flex justify-start">
+                                <button type="button" class="btn-prev bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Regresar</button>
+                            </div>
+
+                            <div class="pt-4 space-y-6 sm:pt-5 sm:space-y-5">
+                                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                    <div class="sm:col-span-2 sm:col-start-1">
+                                        <label for="categoria" class="block text-sm font-medium leading-6 text-gray-900">Area Médica</label>
+                                        <div class="mt-2">
+                                            <select id="categoria" name="categoria" autocomplete="categoria-name" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
+                                                <option value="">Todos </option>
+                                              </select>                                        
+                                        </div>
+                                    </div>
+                            
+                                    <div class="sm:col-span-2">
+                                        <label for="especialidad" class="block text-sm font-medium leading-6 text-gray-900">Especialidad</label>
+                                        <div class="mt-2">
+                                            <select disabled id="especialidad" name="especialidad" autocomplete="especialidad-name" class="disabled:opacity-50 max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
+                                                <option value="">Seleccione una opción</option>
+                                              </select>                                              
+                                        </div>
+                                    </div>
+                            
+                                    <!-- <div class="sm:col-span-2">
+                                        <label for="especialista" class="block text-sm font-medium leading-6 text-gray-900">Profesional</label>
+                                        <div class="mt-2">
+                                            <select disabled id="especialista" name="especialista" autocomplete="especialista-name" class="disabled:opacity-50 max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
+                                                <option value="">Todos</option>
+                                              </select>                                              
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+   
+                            <section id="section-table" class="container pt-4 sm:pt-5 px-4 mx-auto w-full hidden">
+                                <div class="flex items-center gap-x-3">
+                                    <!-- <h2 class="text-lg font-medium text-gray-800 dark:text-white">Profesionales</h2> -->
+                                    <span id="cantidad-titulo" class="px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full">100 Especialistas</span>
+                                </div>
+                            
+                                <div class="flex flex-col mt-6">
+                                    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                        <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                                            <div class="overflow-hidden border border-gray-200 md:rounded-lg">
+                                                <table class="min-w-full divide-y divide-gray-200">
+                                                    <thead class="bg-gray-50">
+                                                        <tr>
+                                                            <th scope="col" class="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500">
+                                                                <div class="flex items-center gap-x-3">
+                                                                    <span>Name</span>
+                                                                </div>
+                                                            </th>
+                                                            <th scope="col" class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500">Fecha</th>
+                            
+                                                            <th scope="col" class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500">Hora</th>
+
+                                                            <th scope="col" class="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500">Duración</th>
+                            
+                                                            <th scope="col" class="relative py-3.5 px-4">
+                                                                <span class="sr-only">Edit</span>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="bg-white divide-y divide-gray-200">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <div class="empty-result"></div>
+                        </div>
+                
+                        <!-- <div class="pt-8 sm:pt-10">
+                            <div class="flex justify-end">
+                                <button type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Regresar</button>
+                                <button id="btn-search" type="button" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Buscar</button>
+                            </div>
+                        </div> -->
+
+                    </div>
+                    <!-- step 3 -->
+                    <div class="form-step hidden">
+                        <div class="space-y-8 divide-gray-200 sm:space-y-5">
+                            <div class="flex justify-start">
+                                <button type="button" class="btn-prev bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Regresar</button>
+                            </div>
+
+                            <div id="heading-confirm" class="container flex flex-col items-center justify-center w-full mx-auto">
+                                <div class="flex items-center gap-x-2 w-full px-4 py-5 mb-2 bg-white border rounded-md shadow sm:px-6 dark:bg-gray-800">
+                                    <img class="object-cover w-14 h-14 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" alt="">
+
+                                    <div>
+                                        <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                                            User database
+                                        </h3>
+                                        <p class="max-w-2xl mt-1 text-sm text-gray-500 dark:text-gray-200">
+                                            Details and informations about user.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- width:445px;height: 332px; -->
+                            <!-- This example requires Tailwind CSS v2.0+ -->
+                            <div class="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200 ">
+                                <div id="vanilla-calendar" class="mx-auto" style="border: 2px solid red;"></div>
+                                <section id="section-hours" class="mt-12 md:mt-0 md:pl-14">
+                                    <!-- <h2 class="font-semibold text-gray-900">Schedule for <time datetime="2022-01-21">January 21, 2022</time></h2> -->
+                                    <ol class="mt-4 space-y-1 text-sm leading-6 text-gray-500 overflow-y-auto h-64">
+                                        <!-- More meetings... -->
+                                    </ol>
+                                </section>
+                            </div>
+                        </div>
+                        <!-- <div class="calendar"></div> -->
+                        <!-- <div id="my-calendar" class="material-theme red"></div> -->
+                    </div>
+                    <!-- step 4 -->
+                    <div class="form-step max-w-2xl mx-auto hidden">
+                        <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
+                            <div class="pt-1 space-y-6 sm:pt-4 sm:space-y-5">
+                                <div class="space-y-6 sm:space-y-5">
+                                    <!-- <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="rut" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> Rut Paciente<span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                        <input id="rut" name="rut" type="text" autocomplete="rut" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </div>
+                             -->
+                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="nombre" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> Nombre <span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                        <input id="nombre" name="nombre" type="text" autocomplete="nombre" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </div>
+                            
+                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="primer-apellido" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> Primer Apellido <span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                        <input id="primer-apellido" name="primer_apellido" type="text" autocomplete="primer-apellido" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </div>
+                            
+                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="segundo-apellido" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> Segundo Apellido <span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                        <input id="segundo-apellido" name="segundo_apellido" type="text" autocomplete="segundo-apellido" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </div>
+                            
+                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="email" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> E-Mail <span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                        <input id="email" name="email" type="email" autocomplete="email" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </div>
+                            
+                                    <div x-data class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="telefono" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> Teléfono móvil <span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                        <input x-mask="(56) 999999999" id="telefono" name="telefono" type="text" autocomplete="telefono" placeholder="(56) 999999999" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="fecha-nacimiento" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> Fecha Nacimiento <span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                        <input id="fecha-nacimiento" name="fecha_nacimiento" type="date" autocomplete="fecha-nacimiento" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="sexo" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> Sexo <span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                            <select name="sexo" id="sexo" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                                                <option disabled value="">Seleccione una Opción</option>
+                                                <option value="M">Masculino</option>
+                                                <option value="F">Femenino</option>
+                                                <option value="NB">No Binario</option>
+                                                <option value="NO">Prefiero No Decirlo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                        <label for="motivo" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"> Motivo <span class="text-red-600">*</span> </label>
+                                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                            <textarea id="motivo" name="motivo" rows="3" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="pt-8 sm:pt-10">
+                            <div class="flex justify-end">
+                                <button type="button" class="btn-prev bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Regresar</button>
+                                <button type="submit" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <div id="spinner" class="hidden spinner">
+                                        <div class="rect1"></div>
+                                        <div class="rect2"></div>
+                                        <div class="rect3"></div>
+                                        <div class="rect4"></div>
+                                        <div class="rect5"></div>
+                                    </div>
+                                    <span>
+                                        Enviar
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+  
+{% endblock content %}
+
+
+{% block footer %}
+    
+{% endblock footer %}
+
+{% block js %}
+    <!-- luxon js -->
+    <script type="text/javascript" src="{% static 'js/libs/luxon-3.3.0/luxon.min.js' %}"></script>
+
+    <!-- vanilla calendar -->
+    <script src="{% static 'js/libs/vanilla-calendar-2.6.1/vanilla-calendar.min.js' %}"></script>
+ 
+    <script src="{% static 'js/helpers/getCookieCSRF.js' %}"></script>
+    <script src="{% static 'js/helpers/utils.js' %}"></script>
+    <script src="{% static 'js/helpers/chileanRut.js' %}"></script>
+
+    <script src="{% static 'js/services/CategoriaAPI.js' %}"></script>
+    <script src="{% static 'js/services/EspecialidadAPI.js' %}"></script>
+    <script src="{% static 'js/services/EspecialistaAPI.js' %}"></script>
+    <script src="{% static 'js/services/CitaAPI.js' %}"></script>
+    <script src="{% static 'js/services/HorarioAPI.js' %}"></script>
+    <script src="{% static 'js/services/ClienteAPI.js' %}"></script>
+    <script>
+        // ********* VARIABLES *********
+        const viewHours = document.getElementById('view-hours');
+        const viewReserve = document.getElementById('view-reserve');
+        const progressbar = document.getElementById('progressbar');
+        const rutScreen = document.getElementById('rut-screen');
+        const rutScreenHoras = document.getElementById('rut-screen-horas');
+        const btnHoras = document.getElementById('btn-horas')
+        const rutHorasInput = document.getElementById('rut-horas');
+        const listadoCitas = document.getElementById('listado-citas');
+        const emptyResult = document.querySelector('.empty-result');
+
+        // formstep
+        const multiFormStep = document.getElementById('multi-form-step');
+        const btnSubmit = multiFormStep.querySelector('button[type="submit"]');
+        const progressSteps= document.querySelectorAll('.progress-step');
+        const formSteps = document.querySelectorAll('.form-step');
+        let formStepsNum = 0;
+
+        // formulario
+        const rutInput = document.getElementById('rut');
+        const nombreInput = document.getElementById('nombre');
+        const primerApellidoInput = document.getElementById('primer-apellido');
+        const segundoApellidoInput = document.getElementById('segundo-apellido');
+        const emailInput = document.getElementById('email');
+        const telefonoInput = document.getElementById('telefono');
+        const sexoInput = document.getElementById('sexo');
+        const fechaNacimientoInput = document.getElementById('fecha-nacimiento');
+
+        const motivoInput = document.getElementById('motivo');
+
+        // otros
+        const calendarContainer = document.getElementById("my-calendar");
+        const categoria = document.getElementById('categoria');
+        const especialidad = document.getElementById('especialidad');
+        const especialista = document.getElementById('especialista');
+        const btnSearch = document.querySelector('#btn-search');
+        const sectionTable = document.querySelector('#section-table');
+        const sectionHours = document.querySelector('#section-hours');
+        const cantidadTitulo = document.getElementById('cantidad-titulo');
+        const headingConfirm = document.getElementById('heading-confirm');
+        let profesionalSeleccionado;
+        let vanillaCalendar;
+
+        const dt = luxon.DateTime;
+        const tomorrowDay = dt.local().plus({ day: 1 })
+        console.log(Date(tomorrowDay.toFormat('MM-dd-yyyy')));
+        console.log(csrftoken);
+        // console.log(dt.local().plus({ day: 1 }).toString());
+        // console.log(dt.local().plus({ day: 1 }).toLocaleString())
+        // console.log(dt.local().zoneName);
+        // console.log(new Date(tomorrowDay.toFormat('MM-dd-yyyy')));
+        // console.log(new Date(tomorrowDay.toFormat('yyyy-MM-dd')));
+
+        // objeto con al informacion de la cita
+        const citaObj = {
+            nombre: '',
+            primer_apellido: '',
+            segundo_apellido: '',
+            telefono: '',
+            email: '',
+            rut: '',
+            fecha_nacimiento: '',
+            sexo: '',
+            especialista: '',
+            especialidad: '',
+            fecha: '',
+            hora: '',
+            motivo: ''
+        }
+        
+        
+        // ********* LISTENERS *********
+        eventlisteners();
+        
+        function eventlisteners() {
+            window.addEventListener('load', () => {
+                cargarCategorias();
+
+                // vanilla calendar
+                const options = {
+                    type: 'default',
+                    // fecha maxima que se muestra, considera el mes
+                    date: {
+                            // min: '2023-08-02',
+                            // max: '2023-12-20',
+                            today: new Date(tomorrowDay.toFormat('MM-dd-yyyy')),
+                    },
+                    settings: {
+                        // fecha maxima que se muestra, considera el mes
+                        range: {
+                            disablePast: true,
+                            // min: '2023-08-02',
+                            // max: '2023-12-20',
+                        },
+                        // selection: {
+                        //     day: 'multiple-ranged',
+                        // },
+                        
+                        visibility: {
+                            // daysOutside: false,
+                            theme: 'light',
+                        },
+                        lang: 'es-CH', 
+                    },
+                    actions: {
+                        clickDay(event, dates) {
+                            console.log(dates);
+
+                            cargarHorasDisponibles(profesionalSeleccionado, dates[0]);
+
+                            citaObj.fecha = dates[0];
+
+                        },
+                    },
+                };
+
+                vanillaCalendar = new VanillaCalendar('#vanilla-calendar', options);
+                vanillaCalendar.init();
+            })
+
+            categoria.addEventListener('change', cargarEspecialidad);
+            especialidad.addEventListener('change', e => {
+                if ( e.target.value ) {
+                    cargarEspecialistas(e)
+                }
+            });
+
+            // multi form buttons
+            multiFormStep.addEventListener('click', changeStep)
+
+            multiFormStep.addEventListener('submit', nuevaCita);
+
+            // input form
+            rutInput.addEventListener('input', datosCita);
+            nombreInput.addEventListener('input', datosCita);
+            primerApellidoInput.addEventListener('input', datosCita);
+            segundoApellidoInput.addEventListener('input', datosCita);
+            emailInput.addEventListener('input', datosCita);
+            telefonoInput.addEventListener('input', datosCita);
+            sexoInput.addEventListener('input', datosCita);
+            fechaNacimientoInput.addEventListener('input', datosCita);
+
+            motivo.addEventListener('input', datosCita);
+
+            // enlaces cambio
+            viewHours.addEventListener('click', (e) => {
+                e.preventDefault();
+                progressbar.classList.add('hidden');
+                progressbar.classList.remove("lg:flex");
+                rutScreenHoras.classList.remove('hidden');
+                rutScreen.classList.add('hidden');
+            })
+
+            viewReserve.addEventListener('click', (e) => {
+                e.preventDefault();
+                progressbar.classList.remove('hidden');
+                progressbar.classList.add("lg:flex");
+                rutScreen.classList.remove('hidden');
+                rutScreenHoras.classList.add('hidden');
+            })
+
+            btnHoras.addEventListener('click', cargarCitasPaciente);
+
+            listadoCitas.addEventListener('click', e => {
+                if ( e.target.classList.contains('btn-anular') ) {
+                    anularCita(e.target.dataset.id)
+                    return;
+                }
+
+                if ( e.target.classList.contains('btn-confirmar') ) {
+                    confirmarCita(e.target.dataset.id);
+                    return;
+                }
+            })
+            // rutHorasInput.addEventListener('input', datosCita);
+        }
+
+
+     
+        // ********* CLASSES *********
+
+
+
+        // ********* FUNCTIONS *********
+        // Genera cambio de step
+        function changeStep(e) {
+            if ( e.target.classList.contains('btn-next') ) {
+                if ( validateStep(formSteps[formStepsNum]) ) {
+                    formStepsNum++;
+                    showCurrentStep();
+                    progressActiveStep();
+                }  
+
+            }else if ( e.target.classList.contains('btn-prev') ) {
+                formStepsNum--;
+                showCurrentStep();
+                progressActiveStep();
+            } else {
+                return;
+            }
+        }
+
+        // Muestra la step activa
+        function showCurrentStep() {
+            formSteps.forEach( formStep => {
+                !formStep.classList.contains('hidden') && formStep.classList.add('hidden');
+            });
+            formSteps[formStepsNum].classList.remove('hidden');
+
+        }
+
+        // Muestra el progressive activo
+        function progressActiveStep() {
+            progressSteps.forEach( (progressStep, index) => {
+                if ( index < formStepsNum + 1) {
+                    progressStep.querySelector('a span span').className = 'flex-shrink-0 w-10 h-10 flex items-center justify-center bg-indigo-600 rounded-full group-hover:bg-indigo-800 text-white'
+                } else {
+                    progressStep.querySelector('a span span').className = 'flex-shrink-0 w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-full group-hover:border-gray-400 text-gray-900'
+                }
+            });
+        }
+
+        // Trae la data de categorias desde el servidor
+        async function cargarCategorias() {
+            const resp = await getCategorias();
+            const { data } = resp;
+            cargarSelectCategoria(data);
+        }
+        
+        // Muestra el select de categorias en el HTML
+        function cargarSelectCategoria(data) {
+            for ( let { id, nombre } of data) {
+                // Select
+                const option = document.createElement('OPTION');
+                option.value = id;
+                option.textContent = nombre;
+                categoria.appendChild(option)
+            }
+        }
+
+        // Trae la data de especialidades desde el servidor
+        async function cargarEspecialidad(e) {
+        
+            const args = {
+                categoria: e.target.value,
+                paginate: 'no'
+            }
+            const resp = await getEspecialidades(args);
+            const { data } = resp;
+         
+            if ( data.length > 0 ) {
+                cargarSelectEspecialidad(data);
+                return;
+            }
+
+            cargarSelectEspecialidad(data);
+            especialidad.disabled = true;
+        }
+
+        // Muestra el select de especialidades en el HTML
+        function cargarSelectEspecialidad(data) {
+            sectionTable.classList.add('hidden')
+            
+            cleanHTML(especialidad);
+            cleanHTML(emptyResult);
+
+            const option = document.createElement('OPTION');
+            option.disabled = true;
+            option.selected = true;
+            option.value = "";
+            option.textContent = "Seleccione una opción";
+            especialidad.appendChild(option)
+            for ( let { id, nombre } of data) {
+                // Select
+                const option = document.createElement('OPTION');
+                option.value = id;
+                option.textContent = nombre;
+                especialidad.appendChild(option)
+            }
+            especialidad.disabled = false;
+        }
+
+        // Trae la data de especialistas desde el servidor
+        async function cargarEspecialistas(e) {
+            const args = {
+                especialidad: e.target.value
+            }
+            const resp = await getEspecialistas(args)
+            const { data } = resp;
+
+            cleanHTML(emptyResult);
+
+            if ( data.length > 0 ) {
+                cantidadTitulo.textContent = `${data.length} profesional${ data.length > 1 ? 'es' : '' }`
+                cargarTablaEspecialistas(data);
+                sectionTable.classList.remove('hidden');
+                return;
+            }
+            sectionTable.classList.add('hidden');
+
+            emptyResult.innerHTML = `
+            <!-- Empty -->
+            <div class="pt-10 pb-16 sm:pt-24 sm:pb-36 text-center" style="">
+                <svg width="96" height="96" fill="none" class="mx-auto mb-6 text-gray-900">
+                    <path d="M36 28.024A18.05 18.05 0 0025.022 39M59.999 28.024A18.05 18.05 0 0170.975 39" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><ellipse cx="37.5" cy="43.5" rx="4.5" ry="7.5" fill="currentColor"></ellipse><ellipse cx="58.5" cy="43.5" rx="4.5" ry="7.5" fill="currentColor"></ellipse><path d="M24.673 75.42a9.003 9.003 0 008.879 5.563m-8.88-5.562A8.973 8.973 0 0124 72c0-7.97 9-18 9-18s9 10.03 9 18a9 9 0 01-8.448 8.983m-8.88-5.562C16.919 68.817 12 58.983 12 48c0-19.882 16.118-36 36-36s36 16.118 36 36-16.118 36-36 36a35.877 35.877 0 01-14.448-3.017" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M41.997 71.75A14.94 14.94 0 0148 70.5c2.399 0 4.658.56 6.661 1.556a3 3 0 003.999-4.066 12 12 0 00-10.662-6.49 11.955 11.955 0 00-7.974 3.032c1.11 2.37 1.917 4.876 1.972 7.217z" fill="currentColor"></path>
+                </svg>
+                <p class="text-lg leading-5 font-medium text-gray-900 mb-3">Lo siento! No hay coincidencias con lo que buscas.</p>
+                <!-- <p>Si quieres intenta con otros parametros</a>. -->
+                </p>
+            </div>
+            `
+        }
+
+        // Muestra tabla de especialistas en el HTML
+        function cargarTablaEspecialistas(data) {
+
+            const listHTML = data.map( profesional => {
+                const { id, user: { nombre }, termino_contrato } = profesional;
+                return `      
+                        <tr>
+                            <td class="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                                <div class="inline-flex items-center gap-x-3">                        
+                                    <div class="flex items-center gap-x-2">
+                                        <img class="object-cover w-10 h-10 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" alt="">
+                                        <div>
+                                            <h2 class="font-medium text-gray-800">Dr. ${ nombre }</h2>
+                                            <p class="text-xs font-normal text-gray-600">${ especialidad.options[especialidad.selectedIndex].textContent }</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">11/11/1999</td>
+                            <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">12:00 AM</td>
+                            <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">30 min</td>
+                            <td class="px-4 py-4 text-sm whitespace-nowrap">
+                                <button
+                                    type="button"
+                                    onclick="cargarAgenda(${id}, '${nombre}', '${termino_contrato}')"
+                                    class="btn-next gap-x-2 flex justify-center items-center  inline-block rounded bg-green-600 px-4 py-3 text-sm font-medium text-white transition hover:rotate-2 hover:scale-110 focus:outline-none focus:ring active:bg-green-500"
+                                    >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="btn-next pointer-events-none w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+                                    </svg>
+                                    Ver Agenda
+                                </button>
+                            
+                            </td>
+                        </tr>
+                    `
+            }).join('');
+
+            sectionTable.querySelector('tbody').innerHTML = listHTML;
+
+        }
+
+        // Inicia el step de agenda y otros procesos
+        function cargarAgenda(id, nombre, termino_contrato) {
+            profesionalSeleccionado = {id, nombre, termino_contrato};
+            vanillaCalendar.reset();
+            cargarHorasDisponibles({id, nombre, termino_contrato});
+            // cargar fecha actual en citaObj
+            // const currentDate = new Date();
+            // citaObj.fecha = tomorrowDay.getFullYear() + '-' + formatDate(tomorrowDay.getMonth())+ '-' + formatDate(tomorrowDay.getDate());
+            citaObj.fecha = tomorrowDay.toFormat('yyyy-MM-dd');
+        }
+
+        // Carga horarios del profesional seleccionado
+        async function cargarHorasDisponibles(profesional, date) {
+            // const currentDate = new Date()
+            const { id, nombre, termino_contrato } = profesional;
+            const args = {
+                especialista: id,
+                fecha: date ? date : tomorrowDay.toFormat('yyyy-MM-dd')
+                // fecha: date ? date : tomorrowDay.getFullYear() + '-' + formatDate( tomorrowDay.getMonth() + 1 )+ '-' + formatDate(tomorrowDay.getDate())
+            }
+  
+            const resp = await getHorarios(args);
+            const {data} = resp;
+
+            vanillaCalendar.settings.range.max = termino_contrato;
+            vanillaCalendar.update();
+
+            mostrarHeadingConfirm(nombre);
+            mostrarHorasDisponibles(data, nombre);
+            citaObj.especialista = id;
+            citaObj.especialidad = especialidad.options[especialidad.selectedIndex].textContent;
+        }
+
+        // Muestra el heading del step de horarios en el HTML
+        function mostrarHeadingConfirm(nombre) {
+            headingConfirm.innerHTML = `
+                            <div class="flex items-center gap-x-2 w-full px-4 py-5 mb-2 bg-white border rounded-md shadow sm:px-6">
+                                <img class="object-cover w-14 h-14 rounded-full" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80" alt="">
+
+                                <div>
+                                    <h3 class="text-lg font-medium leading-6 text-gray-900">
+                                        Dr. ${nombre}
+                                    </h3>
+                                    <p class="max-w-2xl mt-1 text-sm text-gray-500">
+                                        ${ especialidad.options[especialidad.selectedIndex].textContent }
+                                    </p>
+                                </div>
+                            </div>
+                        `;
+        }
+
+        // Muestra horas disponibles en el HTML
+        function mostrarHorasDisponibles(horarios, nombre) {
+            if (horarios.length > 0) {
+                const horasDisponibles = horarios.reduce((acumulador, horario) => {
+                    return acumulador.concat(horario.horas_disponibles);
+                }, []);
+
+                const listHTML = horasDisponibles.map(hora => {
+                    return `
+                    <li class="flex flex-row mb-2 border-gray-400">
+                        <div class="transition duration-500 shadow ease-in-out transform hover:-translate-y-1 hover:shadow-lg select-none cursor-pointer bg-white rounded-md flex flex-1 items-center justify-between p-4">
+                            <div class="pl-1 md:mr-16">
+                                <div class="font-bold text-gray-600">
+                                ${hora} Hrs.
+                                </div>
+                                <p class="mt-0.5">Dr. ${nombre}</p>
+                            </div>
+                            <div class="text-xs text-gray-600">
+                                ${horarios[0].duracion} min
+                            </div>
+                            <button
+                                type="button"
+                                onclick="selecionarHora('${hora}')"
+                                class="btn-next group flex items-center justify-between gap-4 rounded-lg border border-green-600 bg-green-600 px-3 py-1 transition-colors hover:bg-transparent focus:outline-none focus:ring"
+                                >
+                                <span
+                                    class="btn-next font-medium text-white transition-colors group-hover:text-green-600 group-active:text-green-500"
+                                >
+                                    Reservar Hora
+                                </span>
+
+                                <span
+                                    class="btn-next shrink-0 rounded-full border border-current bg-white p-2 text-green-600 group-active:text-green-500"
+                                >
+                                    <svg
+                                    class="btn-next pointer-events-none h-5 w-5 rtl:rotate-180"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                    />
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    </li>
+                    `;
+                }).join('');
+                sectionHours.querySelector('ol').innerHTML = listHTML;
+                sectionHours.querySelector('ol').style.overflowY = 'auto';
+                return;
+            }
+            sectionHours.querySelector('ol').innerHTML = '<p class="text-black text-2xl">No hay horas disponibles para este día con este doctor.</p>';
+        }
+
+        // Crea la nueva cita
+        async function nuevaCita(e) {
+            e.preventDefault();
+            if ( validateStep(formSteps[formStepsNum]) ) {
+                btnSubmit.previousElementSibling.classList.add('hidden');
+                btnSubmit.classList.add('opacity-50');
+                btnSubmit.querySelector('span').textContent = '';
+                btnSubmit.querySelector('#spinner').classList.remove('hidden');
+                btnSubmit.disabled = true;
+
+                const resp = await createCita(citaObj);
+
+
+                if ( resp.hasOwnProperty('success') ) {
+                    const { message, cita } = resp.success
+                    Toastify({
+                        text: message,
+                        duration: 2000,
+                        newWindow: true,
+                        close: true,
+                        gravity: "top", // `top` or `bottom`
+                        position: "right", // `left`, `center` or `right`
+                        stopOnFocus: true, // Prevents dismissing of toast on hover
+                        style: {
+                            background: "#00b09b",
+                        },
+                        callback: function() {
+                            window.location.href = `/agendar/resumen/${cita}/`
+                        },
+                        onClick: function(){} // Callback after click
+                    }).showToast();
+                    return;
+                }
+                
+                if ( resp.hasOwnProperty('error_form') ) {
+                    const { cita_form, cliente_form } = resp.error_form;
+
+                    if ( cita_form) { 
+                        for ( value of Object.values(cita_form) ) {
+                            Toastify({
+                                text: value,
+                                duration: 3000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top", // `top` or `bottom`
+                                position: "right", // `left`, `center` or `right`
+                                stopOnFocus: true, // Prevents dismissing of toast on hover
+                                style: {
+                                    background: "#E52B50",
+                                },
+                                callback: function() {
+                                    btnSubmit.previousElementSibling.classList.remove('hidden');
+                                    btnSubmit.classList.remove('opacity-50');
+                                    btnSubmit.querySelector('span').textContent = 'Enviar';
+                                    btnSubmit.querySelector('#spinner').classList.add('hidden');
+                                    btnSubmit.disabled = false;
+                                },
+                                onClick: function(){} // Callback after click
+                            }).showToast();
+                        }
+                    }
+
+                    if ( cliente_form ) {
+                        for ( value of Object.values(cliente_form) ) {
+                            Toastify({
+                                text: value,
+                                duration: 3000,
+                                newWindow: true,
+                                close: true,
+                                gravity: "top", // `top` or `bottom`
+                                position: "right", // `left`, `center` or `right`
+                                stopOnFocus: true, // Prevents dismissing of toast on hover
+                                style: {
+                                    background: "#E52B50",
+                                },
+                                callback: function() {
+                                    btnSubmit.previousElementSibling.classList.remove('hidden');
+                                    btnSubmit.classList.remove('opacity-50');
+                                    btnSubmit.querySelector('span').textContent = 'Enviar';
+                                    btnSubmit.querySelector('#spinner').classList.add('hidden');
+                                    btnSubmit.disabled = false;
+                                },
+                                onClick: function(){} // Callback after click
+                            }).showToast();
+                        }
+                    }
+                    return;
+                }
+
+
+                console.error(resp.error)
+                Toastify({
+                    text: resp.error,
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "#E52B50",
+                    },
+                    callback: function() {
+                        btnSubmit.previousElementSibling.classList.remove('hidden');
+                        btnSubmit.classList.remove('opacity-50');
+                        btnSubmit.querySelector('span').textContent = 'Enviar';
+                        btnSubmit.querySelector('#spinner').classList.add('hidden');
+                        btnSubmit.disabled = false;
+                    },
+                    onClick: function(){} // Callback after click
+                }).showToast();
+            }
+            console.log('No se envio');
+        }
+
+        // Agrega y validar datos cita
+        function datosCita(e) {
+            // comprobarCliente(e.target.value);
+            // citaObj[e.target.name] = e.target.value;
+            // general
+            if (e.target.value.trim() === '') {
+                mostrarAlerta(`El campo ${e.target.id} es obligatorio`, e.target.parentElement);
+                citaObj[e.target.name] = '';
+                comprobarFormulario();
+                return;
+            } 
+            // rut
+            if (e.target.id === 'rut' && !validateRut(e.target.value)) {
+                mostrarAlerta('El rut no es valido', e.target.parentElement);
+                citaObj[e.target.name] = '';
+                comprobarFormulario();
+                return;
+            }
+            // email
+            if (e.target.id === 'email' && !validarEmail(e.target.value)) {
+                mostrarAlerta('El email no es valido', e.target.parentElement);
+                citaObj[e.target.name] = '';
+                comprobarFormulario();
+                return;
+            }
+
+            limpiarAlerta(e.target.parentElement);
+            // asignar los valores
+            citaObj[e.target.name] = e.target.value.trim();
+            // comprobar el objeto de citaObj
+            comprobarFormulario();
+        }
+
+        // Comprueba si el formulario esta listo para ser enviado
+        function comprobarFormulario() {
+            if (Object.values(citaObj).includes('')) {
+                btnSubmit.classList.add('opacity-50');
+                btnSubmit.disabled = true;
+                return;
+            }
+            btnSubmit.classList.remove('opacity-50');
+            btnSubmit.disabled = false;
+        }
+
+        // Muestra alertas de inputs
+        function mostrarAlerta(mensaje, referencia) {
+            limpiarAlerta(referencia);
+            // generar alerta en HTML
+            const error = document.createElement('P');
+            error.textContent = mensaje;
+            error.classList.add('alerta', 'mt-2', 'text-sm', 'text-red-600');
+            // error.classList.add('alerta', 'bg-red-600', 'text-white', 'p-2', 'text-center');
+
+            // inyectar el error al formulario
+            referencia.appendChild(error);
+        }
+
+        // Limpiar alertas de inputs
+        function limpiarAlerta(referencia) {
+            // comprueba si ya existe un alerta
+            const alerta = referencia.querySelector('.alerta');
+            if (alerta) {
+                alerta.remove();
+            }
+        }
+
+        // Guarda datos hora en el objeto cita
+        function selecionarHora(hora) {
+            citaObj.hora=formatTime(hora);
+            comprobarCliente();
+        }
+
+        // Maneja las validaciones en los step donde se requiera
+        function validateStep(formStep) {
+            if ( formStepsNum === 0 ) {
+                const { rut } = citaObj;
+                if ( rut === '' && !validateRut(rut)) {
+                    return;
+                }
+            }
+
+            // if ( formStepsNum === 3 ) {
+            //     const { nombre, primero_apellido, segundo_apellido, telefono, email, rut, fecha_nacimiento, sexo, especialista, especialidad, fecha, hora } = citaObj;
+            
+            //     if ( nombre === '' ||  primero_apellido === '' ||  segundo_apellido === '' ||  telefono === '' || email === '' || rut === '' || fecha_nacimiento === '' || sexo === '' ||
+            //     especialista === '' || especialidad === '' || fecha === '' || hora === '' ) {
+            //         alert('Los campos no pueden estar vacios')
+            //         return;
+            //     }
+            // }
+
+            return true
+        }
+
+        // Limpia el HTML
+        function cleanHTML(selector) {
+            while ( selector.firstChild ) {
+                selector.removeChild(selector.firstChild);
+            }
+        }
+
+        // Comprueba si existe cliente por rut y precarga datos.
+        async function comprobarCliente() {
+            const { rut } = citaObj;
+            const resp = await getCliente(rut)
+            if ( resp.hasOwnProperty('data') ) {
+                const { data } = resp;
+                cargarDatosCliente(data);
+            } else {
+                limpiarFormulario();
+                console.error(resp.error);
+            }
+        }
+
+        // Cargar datos al objeto cita e inputs cliente
+        function cargarDatosCliente(cliente) {
+            const { nombre, primer_apellido, segundo_apellido, email, telefono, sexo, fecha_nacimiento } = cliente;
+            // Guardar datos
+            // citaObj[rutInput.name] = rut;
+            citaObj[nombreInput.name] = nombre;
+            citaObj[primerApellidoInput.name] = primer_apellido;
+            citaObj[segundoApellidoInput.name] = segundo_apellido;
+            citaObj[emailInput.name] = email;
+            citaObj[telefonoInput.name] = telefono;
+            citaObj[sexoInput.name] = sexo;
+            citaObj[fechaNacimientoInput.name] = fecha_nacimiento;
+
+            
+            // limpiarAlerta(rutInput.parentElement);
+            limpiarAlerta(nombreInput.parentElement);
+            limpiarAlerta(primerApellidoInput.parentElement);
+            limpiarAlerta(segundoApellidoInput.parentElement);
+            limpiarAlerta(emailInput.parentElement);
+            limpiarAlerta(telefonoInput.parentElement);
+            limpiarAlerta(sexoInput.parentElement);
+            limpiarAlerta(fechaNacimientoInput.parentElement);
+
+            // Cargar datos en inputs
+            // rutInput.value = citaObj[rutInput.name]
+            nombreInput.value = citaObj[nombreInput.name]
+            primerApellidoInput.value = citaObj[primerApellidoInput.name]
+            segundoApellidoInput.value = citaObj[segundoApellidoInput.name]
+            emailInput.value = citaObj[emailInput.name]
+            telefonoInput.value = citaObj[telefonoInput.name]
+            sexoInput.value = citaObj[sexoInput.name]
+            fechaNacimientoInput.value = citaObj[fechaNacimientoInput.name]
+
+            comprobarFormulario();
+        }
+
+        // Limpiar formulario
+        function limpiarFormulario() {
+            citaObj.nombre = '';
+            citaObj.primer_apellido = '';
+            citaObj.segundo_apellido = '';
+            citaObj.email = '';
+            citaObj.telefono = '';
+            citaObj.sexo = '';
+            citaObj.fecha_nacimiento = '';
+
+            citaObj.motivo = '';
+
+            nombreInput.value = citaObj[nombreInput.name]
+            primerApellidoInput.value = citaObj[primerApellidoInput.name]
+            segundoApellidoInput.value = citaObj[segundoApellidoInput.name]
+            emailInput.value = citaObj[emailInput.name]
+            telefonoInput.value = citaObj[telefonoInput.name]
+            sexoInput.value = citaObj[sexoInput.name]
+            fechaNacimientoInput.value = citaObj[fechaNacimientoInput.name]
+
+            motivo.value = citaObj[motivo.name]
+
+            comprobarFormulario();
+        }
+
+        // Trae la data de citas de un paciente desde el servidor
+        async function cargarCitasPaciente() {
+            limpiarAlerta(rutHorasInput.parentElement);
+            if (rutHorasInput.value === '') {
+                mostrarAlerta(`El campo rut es obligatorio`, rutHorasInput.parentElement);
+                cleanHTML(document.querySelector('#listado-citas'));
+                return;
+            }
+            if (!validateRut(rutHorasInput.value)) {
+                mostrarAlerta('El rut no es valido', rutHorasInput.parentElement);
+                cleanHTML(document.querySelector('#listado-citas'));
+                return;
+            }
+
+            const args = {
+                rut: rutHorasInput.value.trim()
+            }
+
+            const resp = await getCitas(args)
+            const { data } = resp;
+            mostrarCitasVigentes(data)
+        }
+
+        // Muestra el citas del pacientes en el HTML
+        function mostrarCitasVigentes(citas) {
+            cleanHTML(document.querySelector('#listado-citas'));
+            if ( citas.length > 0 ) {
+                const ul = document.createElement('ul');
+                ul.className = 'grid grid-cols-1 gap-6 sm:grid-cols-2';
+                citas.forEach( cita => {
+                    const { id, fecha, hora, especialidad, especialista } = cita;
+                    const li = document.createElement('LI');
+                    li.className = 'col-span-1 bg-white rounded-lg shadow-lg divide-y divide-gray-400 border border-gray-400';
+                    li.innerHTML = `
+                            <div class="w-full flex items-center justify-between p-6 space-x-6">
+                            <div class="flex-1 truncate">
+                                <div class="flex items-center space-x-3">
+                                <h3 class="text-gray-600 text-sm font-medium truncate">${fecha}</h3>
+                                <span class="flex-shrink-0 inline-block px-2 py-0.5 text-green-800 text-xs font-medium bg-green-100 rounded-full">${hora}</span>
+                                </div>
+                                <h2 class="mt-1 text-gray-900 text-md font-bold truncate">${especialista}</h2>
+                                <p class="mt-1 text-gray-500 text-xs truncate">${especialidad}</p>
+                            </div>
+                            <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60" alt="">
+                            </div>
+                            <div>
+                            <div class="-mt-px flex divide-x divide-gray-200">
+                                <div class="w-0 flex-1 flex">
+                                    <button 
+                                    data-id="${id}"
+                                    class="btn-anular relative -mr-px w-0 flex-1 inline-flex items-center justify-center bg-red-500 p2-4 text-sm text-white font-medium border border-transparent rounded-bl-lg hover:text-gray-100 hover:shadow-lg hover:scale-y-105">
+                                        Anular
+                                    </button>
+                                </div>
+                                <div class="-ml-px w-0 flex-1 flex">
+                                    <button 
+                                    data-id="${id}"
+                                    class="btn-confirmar relative w-0 flex-1 inline-flex items-center justify-center bg-green-500 py-2 text-sm text-white font-medium border border-transparent rounded-br-lg hover:text-gray-100 hover:shadow-lg hover:scale-y-105">
+                                        Confirmar
+                                    </button>
+                                </div>
+                            </div>
+                            </div>
+                    `;
+                    ul.appendChild(li);
+                })
+                document.querySelector('#listado-citas').appendChild(ul);
+                return;
+            }
+            document.querySelector('#listado-citas').innerHTML = `
+            <!-- Empty -->
+            <div class="pt-10 pb-16 sm:pt-24 sm:pb-36 text-center" style="">
+                <svg width="96" height="96" fill="none" class="mx-auto mb-6 text-gray-900">
+                    <path d="M36 28.024A18.05 18.05 0 0025.022 39M59.999 28.024A18.05 18.05 0 0170.975 39" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><ellipse cx="37.5" cy="43.5" rx="4.5" ry="7.5" fill="currentColor"></ellipse><ellipse cx="58.5" cy="43.5" rx="4.5" ry="7.5" fill="currentColor"></ellipse><path d="M24.673 75.42a9.003 9.003 0 008.879 5.563m-8.88-5.562A8.973 8.973 0 0124 72c0-7.97 9-18 9-18s9 10.03 9 18a9 9 0 01-8.448 8.983m-8.88-5.562C16.919 68.817 12 58.983 12 48c0-19.882 16.118-36 36-36s36 16.118 36 36-16.118 36-36 36a35.877 35.877 0 01-14.448-3.017" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M41.997 71.75A14.94 14.94 0 0148 70.5c2.399 0 4.658.56 6.661 1.556a3 3 0 003.999-4.066 12 12 0 00-10.662-6.49 11.955 11.955 0 00-7.974 3.032c1.11 2.37 1.917 4.876 1.972 7.217z" fill="currentColor"></path>
+                </svg>
+                <p class="text-lg leading-5 font-medium text-gray-900 mb-3">Lo siento! No tiene citas reservadas..</p>
+                <!-- <p>Si quieres intenta con otros parametros</a>. -->
+                </p>
+            </div>
+            `
+            // document.querySelector('#listado-citas').innerHTML = '<p class="text-black text-2xl text-center">No tiene citas reservadas.</p>';
+        }
+
+        // Anula cita especifica
+        async function anularCita(id) {
+            loadGlobalSpinner()
+            const data = await updateCita(id, {action: 'anular_general'})
+            if ( data.hasOwnProperty('success') ) {
+                const { success: { message, rut } } = data;
+                Toastify({
+                    text: message,
+                    duration: 2000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "#00b09b",
+                    },
+                    callback: async function() {
+                        const args = {
+                            rut: rut
+                        }
+
+                        const resp = await getCitas(args)
+                        const { data } = resp;
+                        mostrarCitasVigentes(data)
+                        removeGlobalSpinner()
+                    },
+                    onClick: function(){} // Callback after click
+                }).showToast();
+
+            } else {
+                console.error(data.error);
+                Toastify({
+                    text: data.error,
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "#E52B50",
+                    },
+                    callback: function() {
+                        removeGlobalSpinner()
+                    },
+                    onClick: function(){} // Callback after click
+                }).showToast();
+            }
+        }
+
+        // Confirmar cita especifica
+        async function confirmarCita(id) {
+            loadGlobalSpinner()
+            const data = await updateCita(id, {action: 'confirmar_general'})
+            if ( data.hasOwnProperty('success') ) {
+                const { success: { message, rut } } = data;
+                Toastify({
+                    text: message,
+                    duration: 2000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "#00b09b",
+                    },
+                    callback: async function() {
+                        const args = {
+                            rut: rut
+                        }
+
+                        const resp = await getCitas(args)
+                        const { data } = resp;
+                        mostrarCitasVigentes(data)
+                        removeGlobalSpinner()
+                    },
+                    onClick: function(){} // Callback after click
+                }).showToast();
+
+            } else {
+                console.error(data.error);
+                Toastify({
+                    text: data.error,
+                    duration: 3000,
+                    newWindow: true,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                    style: {
+                        background: "#E52B50",
+                    },
+                    callback: function() {
+                        removeGlobalSpinner()
+                    },
+                    onClick: function(){} // Callback after click
+                }).showToast();
+            }
+        }
+
+        // Carga el loader global
+        function loadGlobalSpinner() {
+            const divContainer = document.createElement('DIV');
+            divContainer.classList.add('loader-overlay-container');
+            divContainer.innerHTML = `
+                    <div class="sk-cube-grid">
+                        <div class="sk-cube sk-cube1"></div>
+                        <div class="sk-cube sk-cube2"></div>
+                        <div class="sk-cube sk-cube3"></div>
+                        <div class="sk-cube sk-cube4"></div>
+                        <div class="sk-cube sk-cube5"></div>
+                        <div class="sk-cube sk-cube6"></div>
+                        <div class="sk-cube sk-cube7"></div>
+                        <div class="sk-cube sk-cube8"></div>
+                        <div class="sk-cube sk-cube9"></div>
+                    </div>
+            `;
+            document.body.appendChild(divContainer);
+        }
+
+        // Remueve el loader global
+        function removeGlobalSpinner() {
+            const spinner = document.querySelector('.loader-overlay-container')
+            if ( spinner ) {
+                document.body.removeChild(spinner);
+            }
+        }
+
+
+
+
+        // NO SE ESTAN USANDO
+        // function mostrarHorasDisponibles(data, day) {
+        //     const { horarios } = data;
+        //     const diasSemana = {
+        //         0: 'DO',
+        //         1: 'LU',
+        //         2: 'MA',
+        //         3: 'MI',
+        //         4: 'JU',
+        //         5: 'VI',
+        //         6: 'SA'
+        //     }
+        //     if ( diasSemana.hasOwnProperty(day) ) {
+                
+        //         for ( let horario of horarios ) {
+
+        //                 if( horario.dia === diasSemana[day] ) {
+        //                     const { horas_disponibles, duracion  } = horario;
+        //                     const listHTML = horas_disponibles.map( hora => {
+        //                         return `
+        //                                 <li class="flex flex-row mb-2 border-gray-400">
+        //                                     <div class="transition duration-500 shadow ease-in-out transform hover:-translate-y-1 hover:shadow-lg select-none cursor-pointer bg-white dark:bg-gray-800 rounded-md flex flex-1 items-center p-4">
+        //                                         <div class="flex-1 pl-1 md:mr-16">
+        //                                             <div class="font-bold text-gray-600 dark:text-white">
+        //                                                 ${ hora } Hrs.
+        //                                             </div>
+        //                                             <p class="mt-0.5">Dr. test5</p>
+        //                                         </div>
+        //                                         <div class="text-xs text-gray-600 dark:text-gray-200">
+        //                                             ${duracion} min
+        //                                         </div>
+        //                                         <button class="flex justify-end w-24 text-right">
+        //                                             <svg width="12" fill="currentColor" height="12" class="text-gray-500 hover:text-gray-800 dark:hover:text-white dark:text-gray-200" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+        //                                                 <path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z">
+        //                                                 </path>
+        //                                             </svg>
+        //                                         </button>
+        //                                     </div>
+        //                                 </li>
+        //                                 `;
+        //                     }).join('');
+        //                     sectionHours.querySelector('ol').innerHTML = listHTML;
+        //                     sectionHours.querySelector('ol').style.overflowY = 'auto'
+        //                     return;
+        //                 }
+        //                 sectionHours.querySelector('ol').innerHTML = '<p class="text-black text-2xl">No existen horas disponibles</p>';
+        //         }
+        //         return;
+        //     }
+        //     sectionHours.querySelector('ol').innerHTML = '<p class="text-black text-2xl">No existen horas disponibles</p>';
+        // }
+
+        // pendiente por uso con buscador medico
+        function cargarSelectEspecialista(data) {
+            cleanHTML(especialista);
+            const option = document.createElement('OPTION');
+            option.value = "";
+            option.textContent = "Todos";
+            especialista.appendChild(option)
+            for ( let { id, nombre } of data) {
+                // Select
+                const option = document.createElement('OPTION');
+                option.value = id;
+                option.textContent = nombre;
+                especialista.appendChild(option)
+            }
+            especialista.disabled = false;
+        }
+
+        function cargarEspecialistaButton() {
+            const args = {
+                especialidad: especialidad.value,
+                especialista: especialista.value
+            }
+            getEspecialistas(args)
+                .then( resp => {
+                    // verificamos si la respuesta esta ok 2xx, porque fetch no maneja esto automaticamente
+                    if ( !resp.ok ) {
+                        throw new Error('Error HTTP: ' + resp.status);
+                    }
+                    return resp.json()
+                } )
+                .then( result  => {
+                    const { data } = result;
+                    if ( data.length > 0 ) {
+                        cargarTablaEspecialistas(data);
+                        return;
+                    }
+                    // panel.classList.remove('flex');
+                    // panel.classList.add('hidden');
+                    // emptyPanel.classList.remove('hidden');
+                })
+                .catch(err => console.error(err))
+        }
+
+    </script>
+{% endblock js %}
+
+

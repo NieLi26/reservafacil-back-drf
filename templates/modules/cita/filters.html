@@ -1,0 +1,414 @@
+<div x-data="{ open: false }" @keydown.window.escape="open = false" class="bg-white">
+    <!--
+      Mobile filter dialog
+  
+      Off-canvas menu for mobile, show/hide based on off-canvas menu state.
+    -->
+    <div x-show="open" class="fixed inset-0 flex z-40 lg:hidden" role="dialog" aria-modal="true">
+      <!--
+        Off-canvas menu overlay, show/hide based on off-canvas menu state.
+  
+        Entering: "transition-opacity ease-linear duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "transition-opacity ease-linear duration-300"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div x-show="open" x-transition:enter="transition-opacity ease-linear duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-description="Off-canvas menu overlay, show/hide based on off-canvas menu state." class="fixed inset-0 bg-black bg-opacity-25" @click="open = false" aria-hidden="true">
+      </div>
+  
+      <!--
+        Off-canvas menu, show/hide based on off-canvas menu state.
+  
+        Entering: "transition ease-in-out duration-300 transform"
+          From: "translate-x-full"
+          To: "translate-x-0"
+        Leaving: "transition ease-in-out duration-300 transform"
+          From: "translate-x-0"
+          To: "translate-x-full"
+      -->
+      <div x-show="open" x-transition:enter="transition ease-in-out duration-300 transform" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in-out duration-300 transform" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" class="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-6 flex flex-col overflow-y-auto">
+        <div class="px-4 flex items-center justify-between">
+          <h2 class="text-lg font-medium text-gray-900">Filters</h2>
+          <button type="button" class="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500" @click="open = false">
+            <span class="sr-only">Close menu</span>
+            <!-- Heroicon name: outline/x -->
+            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+  
+        <!-- Filters -->
+        <form class="mt-4">
+          <div id="estado-menu" x-data="{isOpen: false}" class="border-t border-gray-200 px-4 py-6">
+            <h3 class="-mx-2 -my-3 flow-root">
+              <!-- Expand/collapse question button -->
+              <button @click="isOpen = true" type="button" class="px-2 py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400" aria-controls="filter-section-3" aria-expanded="false">
+                <span class="font-medium text-gray-900"> Estado 
+                  <span class="quantity hidden ml-1.5 rounded py-0.5 px-1.5 bg-gray-200 text-xs font-semibold text-gray-700 tabular-nums">1</span>
+                </span>
+                <span class="ml-6 flex items-center">
+                  <!--
+                    Expand/collapse icon, toggle classes based on question open state.
+  
+                    Heroicon name: solid/chevron-down
+  
+                    Open: "-rotate-180", Closed: "rotate-0"
+                  -->
+                  <svg class="rotate-0 h-5 w-5 transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+              </button>
+            </h3>
+            <div x-cloak x-show="isOpen" @click.away="isOpen = false" class="pt-6" id="filter-section-3">
+              <div class="space-y-6">
+                <div class="flex items-center">
+                  <input id="filter-estado-0" name="estado[]" value="AN" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                  <label for="filter-estado-0" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Anulada </label>
+                </div>
+
+                <div class="flex items-center">
+                  <input id="filter-estado-1" name="estado[]" value="RS" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                  <label for="filter-estado-1" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Reservada </label>
+                </div>
+
+                <div class="flex items-center">
+                  <input id="filter-estado-2" name="estado[]" value="CF" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                  <label for="filter-estado-2" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Confirmada </label>
+                </div>
+
+                <div class="flex items-center">
+                  <input id="filter-estado-3" name="estado[]" value="PA" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                  <label for="filter-estado-3" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Pagada </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="realizada-menu" x-data="{isOpen: false}" class="border-t border-gray-200 px-4 py-6">
+            <h3 class="-mx-2 -my-3 flow-root">
+              <!-- Expand/collapse question button -->
+              <button @click="isOpen = true" type="button" class="px-2 py-3 bg-white w-full flex items-center justify-between text-sm text-gray-400" aria-controls="filter-section-3" aria-expanded="false">
+                <span class="font-medium text-gray-900"> Situacion 
+                  <span class="quantity hidden ml-1.5 rounded py-0.5 px-1.5 bg-gray-200 text-xs font-semibold text-gray-700 tabular-nums">1</span>
+                </span>
+                <span class="ml-6 flex items-center">
+                  <!--
+                    Expand/collapse icon, toggle classes based on question open state.
+  
+                    Heroicon name: solid/chevron-down
+  
+                    Open: "-rotate-180", Closed: "rotate-0"
+                  -->
+                  <svg class="rotate-0 h-5 w-5 transform" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+              </button>
+            </h3>
+            <div x-cloak x-show="isOpen" @click.away="isOpen = false" class="pt-6">
+              <div class="space-y-6">
+                <div class="flex items-center">
+                  <input id="filter-realizada-0" name="realizada[]" value="T" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                  <label for="filter-realizada-0" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Realizada </label>
+                </div>
+
+                <div class="flex items-center">
+                  <input id="filter-realizada-1" name="realizada[]" value="F" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                  <label for="filter-realizada-1" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> No Realizada </label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  
+    <div class="max-w-5xl mx-auto px-4 text-center sm:px-6 lg:max-w-full lg:px-8">
+      <!-- <div class="py-24">
+        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">New Arrivals</h1>
+        <p class="mt-4 max-w-3xl mx-auto text-base text-gray-500">Thoughtfully designed objects for the workspace, home, and travel.</p>
+      </div> -->
+  
+      <section aria-labelledby="filter-heading" class="border-t border-gray-200 py-6">
+        <h2 id="filter-heading" class="sr-only">Product filters</h2>
+  
+        <div class="flex items-center justify-between space-x-6">
+          <!-- Reset -->
+          <button id="btn-reset" type="button" class="p-2 flex justify-center items-center  bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg ">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+          </button>
+        
+          <!-- Orden -->
+          <div id="orden-menu" x-data="{isOpen: false}" class="relative z-10 inline-block text-left">
+            <div>
+              <button @click="isOpen = true" type="button" class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900" id="mobile-menu-button" aria-expanded="false" aria-haspopup="true">
+                Ordenar
+                <!-- Heroicon name: solid/chevron-down -->
+                <svg class="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+  
+            <!--
+              Dropdown menu, show/hide based on menu state.
+  
+              Entering: "transition ease-out duration-100"
+                From: "transform opacity-0 scale-95"
+                To: "transform opacity-100 scale-100"
+              Leaving: "transition ease-in duration-75"
+                From: "transform opacity-100 scale-100"
+                To: "transform opacity-0 scale-95"
+            -->
+            <div x-cloak x-show="isOpen" @click.away="isOpen = false" class="origin-top-left absolute left-0 z-10 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="mobile-menu-button" tabindex="-1">
+              <div class="py-1" role="none">
+                <fieldset class="flex flex-col gap-1 p-1">
+                    <legend class="sr-only">Orden</legend>     
+                    <div>
+                      <input
+                        type="radio"
+                        name="orden"
+                        value="asc"
+                        id="asc"
+                        class="peer hidden"
+                        checked
+                      />
+                  
+                      <label
+                        for="asc"
+                        class="flex cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-100 bg-white px-3 py-2 text-gray-900 hover:border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white"
+                      >                 
+                        <p class="text-sm font-medium">A-Z</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                        </svg>     
+                      </label>
+                    </div>
+                  
+                    <div>
+                      <input
+                        type="radio"
+                        name="orden"
+                        value="desc"
+                        id="desc"
+                        class="peer hidden"
+                      />
+                  
+                      <label
+                        for="desc"
+                        class="flex cursor-pointer items-center justify-center gap-x-2 rounded-md border border-gray-100 bg-white px-3 py-2 text-gray-900 hover:border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white"
+                      >
+                        <p class="text-sm font-medium">Z-A</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" />
+                        </svg>  
+                      </label>
+                    </div>
+                </fieldset>
+                <!-- Active: "bg-gray-100", Not Active: "" -->
+                <!-- <button class="block px-4 py-2 text-sm font-medium text-gray-900" role="menuitem" tabindex="-1" id="mobile-menu-item-0"> Az </button>
+  
+                <button class="block px-4 py-2 text-sm font-medium text-gray-900" role="menuitem" tabindex="-1" id="mobile-menu-item-1"> Best Rating </button> -->
+  
+              </div>
+            </div>
+          </div>
+          
+          <!-- Search -->
+          <div class="relative flex-1">
+            <label for="search-cita" class="sr-only"> Buscar </label>
+        
+            <input
+            type="text"
+            id="search-cita"
+            placeholder="Busqueda por..."
+            class="w-full rounded-md border-gray-200 px-4 py-2 shadow-sm sm:text-sm"
+            />
+        
+            <span class="absolute inset-y-0 end-0 grid w-10 place-content-center">
+            <button disabled type="button" class="text-gray-600 hover:text-gray-700">
+                <span class="sr-only">Search</span>
+        
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-4 w-4"
+                >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                />
+                </svg>
+            </button>
+            </span>
+          </div>
+
+          <!-- Fecha -->
+          <div id="fecha-menu" class="relative z-10 inline-block text-left">
+            <input type="text" class="w-full rounded-md border-gray-200 px-4 py-2 shadow-sm sm:text-sm" placeholder="Seleccionar Fecha..." readonly="readonly">
+          </div>
+
+                      
+          <!-- Especialista -->
+          <div id="especialista-menu" x-data @click.away="$refs.ulespecialidad.innerHTML=''" class="relative z-10 inline-block text-left">
+              <div class="relative">
+                <!-- <span class="relative rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
+                  test5
+                </span> -->
+                <input type="text" placeholder="Ingrese Especialista..." class="relative w-full rounded-md border-gray-200 px-4 py-2 shadow-sm sm:text-sm">
+                <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                  <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+                <!-- <button @click="isOpen = true" type="button" class="relative w-full cursor-pointer rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+                  <span class="flex items-center">
+                    <span class="ml-3 block truncate">Buscar Especialista</span>
+                  </span>
+                  <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                    <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z" clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                </button>
+                 -->
+
+                <!--
+                  Select popover, show/hide based on select state.
+            
+                  Entering: ""
+                    From: ""
+                    To: ""
+                  Leaving: "transition ease-in duration-100"
+                    From: "opacity-100"
+                    To: "opacity-0"
+                -->
+                <ul x-ref="ulespecialidad" class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
+                  <!--
+                    Select option, manage highlight styles based on mouseenter/mouseleave and keyboard navigation.
+            
+                    Highlighted: "bg-indigo-600 text-white", Not Highlighted: "text-gray-900"
+                  -->
+          
+            
+                  <!-- More items... -->
+                </ul>
+
+
+                  <!-- Empty state, show/hide based on command palette state. -->
+                <!-- <div class="py-14 px-4 text-center sm:px-14">
+            
+                  <svg class="mx-auto h-6 w-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                  <p class="mt-4 text-sm text-gray-900">No people found using that search term.</p>
+                </div> -->
+                
+              </div>
+          </div>
+
+          <!-- Mobile filter dialog toggle, controls the 'mobileFilterDialogOpen' state. -->
+          <button type="button" class="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 lg:hidden" @click="open = true">Filtros</button>
+  
+          <div class="hidden lg:flex lg:items-baseline lg:space-x-8">
+            <!-- Estado -->
+            <div id="estado-menu" x-data="{isOpen: false}" class="relative z-10 inline-block text-left">
+              <div>
+                <button @click="isOpen = true" type="button" class="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900" aria-expanded="false">
+                  <span>Estado</span>
+
+                  <span class="quantity hidden ml-1.5 rounded py-0.5 px-1.5 bg-gray-200 text-xs font-semibold text-gray-700 tabular-nums">1</span>
+                  <!-- Heroicon name: solid/chevron-down -->
+                  <svg class="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+  
+              <!--
+                Entering: "transition ease-out duration-100"
+                  From: "transform opacity-0 scale-95"
+                  To: "transform opacity-100 scale-100"
+                Leaving: "transition ease-in duration-75"
+                  From: "transform opacity-100 scale-100"
+                  To: "transform opacity-0 scale-95"
+              -->
+              <div x-cloak x-show="isOpen" @click.away="isOpen = false" class="origin-top-right absolute right-0 mt-2 bg-white rounded-md shadow-2xl p-4 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <form class="space-y-4" method="post" >
+                  <div class="flex items-center">
+                    <input id="filter-estado-0" name="estado[]" value="AN" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="filter-estado-0" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Anulada </label>
+                  </div>
+  
+                  <div class="flex items-center">
+                    <input id="filter-estado-1" name="estado[]" value="RS" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="filter-estado-1" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Reservada </label>
+                  </div>
+  
+                  <div class="flex items-center">
+                    <input id="filter-estado-2" name="estado[]" value="CF" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="filter-estado-2" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Confirmada </label>
+                  </div>
+  
+                  <div class="flex items-center">
+                    <input id="filter-estado-3" name="estado[]" value="PA" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="filter-estado-3" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Pagada </label>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Realizada -->
+            <div id="realizada-menu" x-data="{isOpen: false}" class="relative z-10 inline-block text-left">
+              <div>
+                <button @click="isOpen = true" type="button" class="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900" aria-expanded="false">
+                  <span>Situacion</span>
+
+                  <span class="quantity hidden ml-1.5 rounded py-0.5 px-1.5 bg-gray-200 text-xs font-semibold text-gray-700 tabular-nums">1</span>
+                  <!-- Heroicon name: solid/chevron-down -->
+                  <svg class="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+  
+              <!--
+                Entering: "transition ease-out duration-100"
+                  From: "transform opacity-0 scale-95"
+                  To: "transform opacity-100 scale-100"
+                Leaving: "transition ease-in duration-75"
+                  From: "transform opacity-100 scale-100"
+                  To: "transform opacity-0 scale-95"
+              -->
+              <div x-cloak x-show="isOpen" @click.away="isOpen = false" class="origin-top-right absolute right-0 mt-2 bg-white rounded-md shadow-2xl p-4 ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <form class="space-y-4" method="post" >
+                  <div class="flex items-center">
+                    <input id="filter-realizada-0" name="realizada[]" value="T" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="filter-realizada-0" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> Realizada </label>
+                  </div>
+  
+                  <div class="flex items-center">
+                    <input id="filter-realizada-1" name="realizada[]" value="F" type="checkbox" class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="filter-realizada-1" class="ml-3 pr-6 text-sm font-medium text-gray-900 whitespace-nowrap"> No Realizada </label>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  

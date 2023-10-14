@@ -1,0 +1,102 @@
+<div x-show="modalCreate.isOpen" 
+    x-cloak
+    x-transition:enter="transition duration-300 ease-out"
+    x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
+    x-transition:enter-end="translate-y-0 opacity-100 sm:scale-100"
+    x-transition:leave="transition duration-150 ease-in"
+    x-transition:leave-start="translate-y-0 opacity-100 sm:scale-100"
+    x-transition:leave-end="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
+    class="fixed inset-0 z-10 overflow-y-auto" 
+    aria-labelledby="modal-title" role="dialog" aria-modal="true"
+>
+    <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <span class="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">&#8203;</span>
+
+            <div @click.away="modalCreate.closeModal()"  class="relative inline-block px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-sm sm:p-6 sm:align-middle">      
+            <div class="space-y-8">
+                <div class="relative mt-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-700"></div>
+                </div>
+                <div class="relative flex justify-center text-xl leading-5 font-extrabold">
+                    <span class="px-2 text-gray-900 bg-white">
+                        Nuevo Registro de Horario
+                    </span>
+                </div>
+                </div>
+            </div>
+                <form action="." method="post" id="form-horario" class="space-y-8 divide-y divide-gray-200" @submit.prevent="modalCreate.submitForm()">
+                {% csrf_token %}
+                <div class="space-y-8 divide-y divide-gray-200">
+                    <div class="py-2">
+                        <div class="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                            <div class="sm:col-span-6">
+                                <label for="especialista" class="block text-sm font-medium text-gray-700"> Especialista </label>
+                                <div class="mt-1">
+                                    <select @change="modalCreate.datosHorario" id="especialista" name="especialista" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <option disabled selected value="">Seleccione una Opción</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-6">
+                                <label for="dia" class="block text-sm font-medium text-gray-700"> Dia </label>
+                                <div class="mt-1">
+                                    <select @change="modalCreate.datosHorario" id="dia" name="dia" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                        <option disabled selected value="">Seleccione una Opción</option>
+                                        <option value="LU">Lunes</option>
+                                        <option value="MA">Martes</option>
+                                        <option value="MI">Miercoles</option>
+                                        <option value="JU">Jueves</option>
+                                        <option value="Vi">Viernes</option>
+                                        <option value="SA">Sabado</option>
+                                        <option value="DO">Domingo</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-6">
+                                <label for="inicio" class="block text-sm font-medium text-gray-700"> Inicio </label>
+                                <div class="mt-1">
+                                    <input @input="modalCreate.datosHorario" type="time" name="inicio" id="inicio" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-6">
+                                <label for="termino" class="block text-sm font-medium text-gray-700"> Termino </label>
+                                <div class="mt-1">
+                                    <input @input="modalCreate.datosHorario" type="time" name="termino" id="termino" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-6">
+                                <label for="duracion" class="block text-sm font-medium text-gray-700"> Duracion </label>
+                                <div class="mt-1">
+                                    <input @input="modalCreate.datosHorario" type="number" name="duracion" id="duracion" min="0" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-5">
+                    <div class="flex">
+                    <button @click="modalCreate.closeModal()" type="button" class="w-full bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancelar</button>
+                    <button type="submit" class="w-full ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <div id="spinner" class="hidden spinner w-[20px] h-[20px]">
+                            <div class="rect1"></div>
+                            <div class="rect2"></div>
+                            <div class="rect3"></div>
+                            <div class="rect4"></div>
+                            <div class="rect5"></div>
+                        </div>
+                        <span>
+                        Guardar
+                        </span>
+                    </button>
+                    
+                    </div>
+                </div>
+                </form>
+            </div>
+    </div>
+</div>

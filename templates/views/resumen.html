@@ -1,0 +1,63 @@
+{% extends 'base_client.html' %}
+{% load static %}
+
+{% block navbar %}
+    
+{% endblock navbar %}
+
+{% block content %}
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- We've used 3xl here, but feel free to try other max-widths based on your needs -->
+    <div class="max-w-3xl mx-auto mt-24 py-16 px-4 sm:px-6 md:px-8 shadow-lg shadow-indigo-500/40 rounded-lg">
+          <div class="px-4 sm:px-0">
+            <h3 class="text-2xl font-bold leading-7 text-gray-900">Información de Reserva</h3>
+            <!-- <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-500">Personal details and application.</p> -->
+          </div>
+          <div class="mt-6 border-t border-gray-100">
+            <dl class="divide-y divide-gray-300">
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Profesional</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ cita.especialista.user.username }}</dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Fecha</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ cita.fecha }}</dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Hora</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ cita.hora }} Hrs</dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">Paciente</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ cita.cliente.nombre }}</dd>
+              </div>
+              <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                <dt class="text-sm font-medium leading-6 text-gray-900">N° Cita</dt>
+                <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{{ cita.id }}</dd>
+              </div>
+
+              <div class="pt-8 sm:pt-10">
+                <div class="flex justify-center">
+                    <a href="/" class="bg-red-600 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Cerrar</a>
+                    <button noprint type="button" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Imprimir</button>
+                </div>
+            </div>
+            </dl>
+          </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}
+    
+{% endblock footer %}
+
+
+{% block js %}
+    <script type="text/javascript">
+        document.querySelector('button').addEventListener('click', () => {
+            window.print()
+        });
+    </script>
+{% endblock js %}

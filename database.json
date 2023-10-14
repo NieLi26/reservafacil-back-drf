@@ -1,0 +1,885 @@
+[
+{
+  "model": "booking.categoria",
+  "pk": 3,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.738Z",
+    "modified": "2023-08-06T02:27:00.139Z",
+    "nombre": "Adolescencia"
+  }
+},
+{
+  "model": "booking.categoria",
+  "pk": 4,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.808Z",
+    "modified": "2023-07-11T22:09:02.808Z",
+    "nombre": "Cardiolog�a Adulto"
+  }
+},
+{
+  "model": "booking.categoria",
+  "pk": 5,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.878Z",
+    "modified": "2023-07-11T22:09:02.878Z",
+    "nombre": "Cirug�a Adulto"
+  }
+},
+{
+  "model": "booking.categoria",
+  "pk": 10,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-06T03:33:02.424Z",
+    "modified": "2023-08-06T03:33:08.032Z",
+    "nombre": "categoria rpueba 5"
+  }
+},
+{
+  "model": "booking.tarifa",
+  "pk": 25,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.698Z",
+    "modified": "2023-08-10T21:03:44.020Z",
+    "valor": 20000
+  }
+},
+{
+  "model": "booking.tarifa",
+  "pk": 26,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.708Z",
+    "modified": "2023-07-11T22:09:02.708Z",
+    "valor": 40000
+  }
+},
+{
+  "model": "booking.tarifa",
+  "pk": 27,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.718Z",
+    "modified": "2023-07-11T22:09:02.718Z",
+    "valor": 60000
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 2,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.768Z",
+    "modified": "2023-08-11T17:34:44.832Z",
+    "categoria": 3,
+    "tarifa": 25,
+    "nombre": "Endocrinologia Adolescente"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 3,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.778Z",
+    "modified": "2023-07-11T22:09:02.778Z",
+    "categoria": 3,
+    "tarifa": 25,
+    "nombre": "Pediatria Adolescente"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 4,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.798Z",
+    "modified": "2023-07-11T22:09:02.798Z",
+    "categoria": 3,
+    "tarifa": 25,
+    "nombre": "Psicologia Adolescente"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 6,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.838Z",
+    "modified": "2023-07-11T22:09:02.838Z",
+    "categoria": 4,
+    "tarifa": 25,
+    "nombre": "Arritmias"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 7,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.848Z",
+    "modified": "2023-07-11T22:09:02.848Z",
+    "categoria": 4,
+    "tarifa": 25,
+    "nombre": "Electrofisiolog�a"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 8,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.868Z",
+    "modified": "2023-07-11T22:09:02.868Z",
+    "categoria": 4,
+    "tarifa": 25,
+    "nombre": "Marcapasos"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 9,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.888Z",
+    "modified": "2023-07-11T22:09:02.888Z",
+    "categoria": 5,
+    "tarifa": 25,
+    "nombre": "Cirug�a Bari�trica Y Metab�lica"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 10,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.908Z",
+    "modified": "2023-07-11T22:09:02.908Z",
+    "categoria": 5,
+    "tarifa": 25,
+    "nombre": "Cirug�a De Cabeza, Cuello Y Tiroides"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 11,
+  "fields": {
+    "is_active": true,
+    "created": "2023-07-11T22:09:02.918Z",
+    "modified": "2023-07-11T22:09:02.918Z",
+    "categoria": 5,
+    "tarifa": 25,
+    "nombre": "Cirug�a De Hernias"
+  }
+},
+{
+  "model": "booking.especialidad",
+  "pk": 13,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-07T00:41:25.906Z",
+    "modified": "2023-08-07T00:41:25.906Z",
+    "categoria": 5,
+    "tarifa": 26,
+    "nombre": "Especilidad Prueba"
+  }
+},
+{
+  "model": "booking.horario",
+  "pk": 1,
+  "fields": {
+    "especialista": 1,
+    "dia": "SA",
+    "inicio": "08:00:00",
+    "termino": "18:00:00",
+    "duracion": 15
+  }
+},
+{
+  "model": "booking.horario",
+  "pk": 2,
+  "fields": {
+    "especialista": 1,
+    "dia": "MA",
+    "inicio": "08:00:00",
+    "termino": "20:00:00",
+    "duracion": 30
+  }
+},
+{
+  "model": "booking.horario",
+  "pk": 3,
+  "fields": {
+    "especialista": 3,
+    "dia": "LU",
+    "inicio": "10:00:00",
+    "termino": "14:00:00",
+    "duracion": 30
+  }
+},
+{
+  "model": "booking.horario",
+  "pk": 4,
+  "fields": {
+    "especialista": 3,
+    "dia": "LU",
+    "inicio": "17:00:00",
+    "termino": "20:00:00",
+    "duracion": 30
+  }
+},
+{
+  "model": "booking.horario",
+  "pk": 5,
+  "fields": {
+    "especialista": 3,
+    "dia": "MA",
+    "inicio": "08:00:00",
+    "termino": "14:00:00",
+    "duracion": 30
+  }
+},
+{
+  "model": "booking.horario",
+  "pk": 6,
+  "fields": {
+    "especialista": 2,
+    "dia": "JU",
+    "inicio": "08:00:00",
+    "termino": "18:00:00",
+    "duracion": 10
+  }
+},
+{
+  "model": "booking.horario",
+  "pk": 7,
+  "fields": {
+    "especialista": 1,
+    "dia": "LU",
+    "inicio": "08:00:00",
+    "termino": "16:40:00",
+    "duracion": 20
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 3,
+  "fields": {
+    "nombre": "pedro3322",
+    "primer_apellido": "mendoza",
+    "segundo_apellido": "perez",
+    "telefono": "(56) 3131312311",
+    "email": "theprimatesfactoryinc@gmail.com",
+    "rut": "18999474-5",
+    "fecha_nacimiento": "1990-05-09",
+    "sexo": "NB"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 6,
+  "fields": {
+    "nombre": "pedro",
+    "primer_apellido": "ordones",
+    "segundo_apellido": "caluya",
+    "telefono": "(56) 2333333333",
+    "email": "pedro@gmail.com",
+    "rut": "27905556-K",
+    "fecha_nacimiento": "1986-01-16",
+    "sexo": "M"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 7,
+  "fields": {
+    "nombre": "manuel",
+    "primer_apellido": "urrutia",
+    "segundo_apellido": "loros",
+    "telefono": "(56) 3243242344",
+    "email": "manu@gmail.com",
+    "rut": "27773301-3",
+    "fecha_nacimiento": "1984-05-08",
+    "sexo": "M"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 15,
+  "fields": {
+    "nombre": "manuel",
+    "primer_apellido": "urrutia",
+    "segundo_apellido": "perez",
+    "telefono": "(56) 3424234234",
+    "email": "cawak96020@nmaller.com",
+    "rut": "25814087-7",
+    "fecha_nacimiento": "1976-05-03",
+    "sexo": "M"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 16,
+  "fields": {
+    "nombre": "pedro",
+    "primer_apellido": "aguirrez",
+    "segundo_apellido": "cerda",
+    "telefono": "(56) 4343453455",
+    "email": "cawak96020@nmaller.com",
+    "rut": "13320215-3",
+    "fecha_nacimiento": "1990-05-08",
+    "sexo": "M"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 17,
+  "fields": {
+    "nombre": "kur",
+    "primer_apellido": "cobain",
+    "segundo_apellido": "molina",
+    "telefono": "(56) 2323423424",
+    "email": "cawak96020@nmaller.com",
+    "rut": "37977533-0",
+    "fecha_nacimiento": "1990-12-31",
+    "sexo": "M"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 18,
+  "fields": {
+    "nombre": "henriique",
+    "primer_apellido": "davalos",
+    "segundo_apellido": "junior",
+    "telefono": "(56) 4353453455",
+    "email": "cawak96020@nmaller.com",
+    "rut": "30298675-4",
+    "fecha_nacimiento": "1988-01-13",
+    "sexo": "M"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 19,
+  "fields": {
+    "nombre": "jaimico",
+    "primer_apellido": "cotorra",
+    "segundo_apellido": "mena",
+    "telefono": "(56) 3242342342",
+    "email": "xabom50372@mliok.com",
+    "rut": "24454741-9",
+    "fecha_nacimiento": "1990-05-08",
+    "sexo": "M"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 20,
+  "fields": {
+    "nombre": "cristobal",
+    "primer_apellido": "mujica",
+    "segundo_apellido": "mena",
+    "telefono": "(56) 3242342344",
+    "email": "cawak96020@nmaller.com",
+    "rut": "18681727-3",
+    "fecha_nacimiento": "1994-12-27",
+    "sexo": "NB"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 21,
+  "fields": {
+    "nombre": "javier modificado",
+    "primer_apellido": "alcarzar",
+    "segundo_apellido": "mena",
+    "telefono": "(56) 2342342344",
+    "email": "theprimatesfactoryinc@gmail.com",
+    "rut": "37966173-4",
+    "fecha_nacimiento": "1994-05-03",
+    "sexo": "NB"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 22,
+  "fields": {
+    "nombre": "charlie",
+    "primer_apellido": "urreta",
+    "segundo_apellido": "campos",
+    "telefono": "(56) 3424424324",
+    "email": "theprimatesfactoryinc@gmail.com",
+    "rut": "24387805-5",
+    "fecha_nacimiento": "2003-01-08",
+    "sexo": "NB"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 23,
+  "fields": {
+    "nombre": "manuel",
+    "primer_apellido": "benavidez",
+    "segundo_apellido": "valente",
+    "telefono": "(56) 2343423444",
+    "email": "wiwife3404@kkoup.com",
+    "rut": "28287749-k",
+    "fecha_nacimiento": "1990-05-14",
+    "sexo": "NO"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 24,
+  "fields": {
+    "nombre": "pedro",
+    "primer_apellido": "solorza",
+    "segundo_apellido": "aguirre",
+    "telefono": "(56) 2424242424",
+    "email": "theprimatesfactoryinc@gmail.com",
+    "rut": "14447557-7",
+    "fecha_nacimiento": "1994-01-04",
+    "sexo": "NO"
+  }
+},
+{
+  "model": "booking.cliente",
+  "pk": 25,
+  "fields": {
+    "nombre": "Eric",
+    "primer_apellido": "Cisternasca",
+    "segundo_apellido": "campo",
+    "telefono": "(56) 342423423",
+    "email": "eric@gmail.com",
+    "rut": "37317942-6",
+    "fecha_nacimiento": "1987-05-05",
+    "sexo": "NB"
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 1,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-09T16:33:20.209Z",
+    "modified": "2023-08-11T17:53:38.448Z",
+    "cliente": 3,
+    "especialista": 1,
+    "especialidad": "Endocrinologia Adolescente",
+    "fecha": "2023-08-12",
+    "hora": "08:30:00",
+    "motivo": "Me duele el pie",
+    "estado": "AN",
+    "obs": "Dolor de tobillo",
+    "realizada": true
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 2,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-09T18:34:49.120Z",
+    "modified": "2023-08-11T15:39:55.408Z",
+    "cliente": 24,
+    "especialista": 2,
+    "especialidad": "Arritmias",
+    "fecha": "2023-08-10",
+    "hora": "14:50:00",
+    "motivo": "me duele el cuello",
+    "estado": "AN",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 3,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:29:29.379Z",
+    "modified": "2023-08-11T17:55:43.955Z",
+    "cliente": 3,
+    "especialista": 1,
+    "especialidad": "Seleccione una opci�n",
+    "fecha": "2023-08-14",
+    "hora": "13:00:00",
+    "motivo": "motivo de pruebaa",
+    "estado": "AN",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 4,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:31:58.762Z",
+    "modified": "2023-08-11T19:56:59.255Z",
+    "cliente": 3,
+    "especialista": 1,
+    "especialidad": "Endocrinologia Adolescente",
+    "fecha": "2023-08-12",
+    "hora": "14:15:00",
+    "motivo": "probando esta cita",
+    "estado": "AN",
+    "obs": "probando cita",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 5,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:35:34.309Z",
+    "modified": "2023-08-11T17:46:16.178Z",
+    "cliente": 3,
+    "especialista": 1,
+    "especialidad": "Endocrinologia Adolescente",
+    "fecha": "2023-08-12",
+    "hora": "14:45:00",
+    "motivo": "asdasd",
+    "estado": "AN",
+    "obs": "holaaaa",
+    "realizada": true
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 6,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:36:51.643Z",
+    "modified": "2023-08-14T17:05:07.840Z",
+    "cliente": 3,
+    "especialista": 1,
+    "especialidad": "Endocrinologia Adolescente",
+    "fecha": "2023-08-12",
+    "hora": "14:15:00",
+    "motivo": "asddasd",
+    "estado": "PA",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 7,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-14T23:08:08.874Z",
+    "modified": "2023-08-14T23:27:41.688Z",
+    "cliente": 3,
+    "especialista": 3,
+    "especialidad": "Cirug�a De Hernias",
+    "fecha": "2023-08-21",
+    "hora": "11:00:00",
+    "motivo": "asas",
+    "estado": "AN",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 8,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-14T23:08:57.274Z",
+    "modified": "2023-08-14T23:28:40.512Z",
+    "cliente": 3,
+    "especialista": 3,
+    "especialidad": "Cirug�a De Hernias",
+    "fecha": "2023-08-21",
+    "hora": "18:30:00",
+    "motivo": "sdasd",
+    "estado": "AN",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 10,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-16T16:14:09.847Z",
+    "modified": "2023-08-16T16:14:09.847Z",
+    "cliente": 3,
+    "especialista": 1,
+    "especialidad": "Endocrinologia Adolescente",
+    "fecha": "2023-08-21",
+    "hora": "08:20:00",
+    "motivo": "asaasas",
+    "estado": "RS",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 11,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-16T16:21:02.989Z",
+    "modified": "2023-08-16T16:21:02.989Z",
+    "cliente": 3,
+    "especialista": 1,
+    "especialidad": "Endocrinologia Adolescente",
+    "fecha": "2023-08-21",
+    "hora": "08:40:00",
+    "motivo": "aadddad",
+    "estado": "RS",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 12,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-16T16:27:24.886Z",
+    "modified": "2023-08-16T16:27:24.886Z",
+    "cliente": 24,
+    "especialista": 1,
+    "especialidad": "Endocrinologia Adolescente",
+    "fecha": "2023-08-21",
+    "hora": "08:00:00",
+    "motivo": "naaaaaaaaa",
+    "estado": "RS",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 13,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-16T16:29:23.208Z",
+    "modified": "2023-08-16T16:29:23.208Z",
+    "cliente": 24,
+    "especialista": 1,
+    "especialidad": "Endocrinologia Adolescente",
+    "fecha": "2023-08-21",
+    "hora": "09:40:00",
+    "motivo": "dddddddddda",
+    "estado": "RS",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 14,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-16T16:31:45.758Z",
+    "modified": "2023-08-16T16:31:45.758Z",
+    "cliente": 3,
+    "especialista": 3,
+    "especialidad": "Cirug�a De Hernias",
+    "fecha": "2023-08-22",
+    "hora": "08:00:00",
+    "motivo": "ddfdf",
+    "estado": "RS",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.cita",
+  "pk": 15,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-16T16:38:17.163Z",
+    "modified": "2023-08-16T16:38:17.163Z",
+    "cliente": 24,
+    "especialista": 3,
+    "especialidad": "Cirug�a De Hernias",
+    "fecha": "2023-08-22",
+    "hora": "11:30:00",
+    "motivo": "dddd",
+    "estado": "RS",
+    "obs": "",
+    "realizada": false
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 1,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T15:39:59.132Z",
+    "modified": "2023-08-11T15:39:59.132Z",
+    "cita": 2,
+    "motivo": "gffg"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 2,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T15:55:39.299Z",
+    "modified": "2023-08-11T15:55:39.299Z",
+    "cita": 1,
+    "motivo": "xasd"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 3,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:33:45.133Z",
+    "modified": "2023-08-11T17:33:45.133Z",
+    "cita": 4,
+    "motivo": "porque quiero"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 4,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:35:00.440Z",
+    "modified": "2023-08-11T17:35:00.440Z",
+    "cita": 1,
+    "motivo": "Anulado por Cliente"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 5,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:35:14.589Z",
+    "modified": "2023-08-11T17:35:14.589Z",
+    "cita": 3,
+    "motivo": "Anulado por Cliente"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 6,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:37:49.482Z",
+    "modified": "2023-08-11T17:37:49.482Z",
+    "cita": 6,
+    "motivo": "Anulado por Cliente"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 7,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:46:18.714Z",
+    "modified": "2023-08-11T17:46:18.714Z",
+    "cita": 5,
+    "motivo": "holitoo"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 8,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:54:01.992Z",
+    "modified": "2023-08-11T17:54:01.992Z",
+    "cita": 1,
+    "motivo": "Anulado por Cliente"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 9,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:54:06.226Z",
+    "modified": "2023-08-11T17:54:06.226Z",
+    "cita": 6,
+    "motivo": "Anulado por Cliente"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 10,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T17:55:46.238Z",
+    "modified": "2023-08-11T17:55:46.238Z",
+    "cita": 3,
+    "motivo": "Anulado por Cliente"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 11,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T19:42:31.909Z",
+    "modified": "2023-08-11T19:42:31.909Z",
+    "cita": 4,
+    "motivo": "asasd"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 12,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-11T19:57:02.887Z",
+    "modified": "2023-08-11T19:57:02.887Z",
+    "cita": 4,
+    "motivo": "laaa"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 13,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-14T23:27:45.131Z",
+    "modified": "2023-08-14T23:27:45.131Z",
+    "cita": 7,
+    "motivo": "Anulado por Cliente"
+  }
+},
+{
+  "model": "booking.historialanulacion",
+  "pk": 14,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-14T23:28:42.968Z",
+    "modified": "2023-08-14T23:28:42.968Z",
+    "cita": 8,
+    "motivo": "Anulado por Cliente"
+  }
+},
+{
+  "model": "booking.pago",
+  "pk": 18,
+  "fields": {
+    "is_active": true,
+    "created": "2023-08-14T17:05:07.821Z",
+    "modified": "2023-08-14T17:05:07.821Z",
+    "cita": 6,
+    "total": 40000,
+    "folio": "Sin Folio",
+    "cod_especialista": "0000232344",
+    "metodo": "TA"
+  }
+}
+]
