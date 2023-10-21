@@ -28,7 +28,7 @@ class Categoria(TimeStampedModel):
 
 class Tarifa(TimeStampedModel):
     '''Model definition for Tarifa.'''
-    valor = models.PositiveIntegerField(default=0)
+    valor = models.PositiveIntegerField()
 
     class Meta:
         '''Meta definition for Tarifa.'''
@@ -74,7 +74,7 @@ class Especialidad(TimeStampedModel):
         }
 
 
-class Horario(models.Model):
+class Horario(TimeStampedModel):
     class Dias(models.TextChoices):
         LUNES = 'LU', 'Lunes'
         MARTES = 'MA', 'Martes'
@@ -193,7 +193,7 @@ class ExcepcionHorario(TimeStampedModel):
     fecha = models.DateField()
 
 
-class Valoracion(models.Model):
+class Valoracion(TimeStampedModel):
     class Puntuaciones(models.TextChoices):
         UNO = '1', '1'
         DOS = '2', '2'
@@ -218,7 +218,7 @@ class Valoracion(models.Model):
         pass
 
 
-class Cliente(models.Model):
+class Cliente(TimeStampedModel):
     class Sexos(models.TextChoices):
         MASCULINO = 'M', 'Masculino'
         FEMENINO = 'F', 'Femenino'

@@ -41,24 +41,24 @@ class CustomPermissionRequiredMixin(PermissionRequiredMixin):
 class CustomUserPassesTestMixin:
     list_methods = []
 
-    def dispatch(self, request, *args, **kwargs):
-        response = {}
-        status = None
-        if request.method in self.list_methods and not self.has_group(request, 'Administrador'):
-            status = 403
-            response['error'] = 'No tiene permiso para  realizar esta accion'
-            return JsonResponse(response, status=status)
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #     response = {}
+    #     status = None
+    #     if request.method in self.list_methods and not self.has_group(request, 'Administrador'):
+    #         status = 403
+    #         response['error'] = 'No tiene permiso para  realizar esta accion'
+    #         return JsonResponse(response, status=status)
+    #     return super().dispatch(request, *args, **kwargs)
 
-    def has_group(self, request, name_group):
-        if request.user.groups.filter(name=name_group).exists():
-            return True
-        return False
+    # def has_group(self, request, name_group):
+    #     if request.user.groups.filter(name=name_group).exists():
+    #         return True
+    #     return False
 
-    def is_allowed(self, request, name_group):
-        if request.user.groups.filter(name=name_group).exists():
-            return True
-        return False
+    # def is_allowed(self, request, name_group):
+    #     if request.user.groups.filter(name=name_group).exists():
+    #         return True
+    #     return False
 
 
 class ValidatePermissionRequiredMixin:

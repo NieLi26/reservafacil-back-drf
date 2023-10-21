@@ -1,5 +1,6 @@
 from django.urls import path
 from apps.booking.api.v1 import views as booking_views
+from apps.accounts.api.v1 import views as accounts_views
 
 app_name = "v1"
 
@@ -94,4 +95,19 @@ urlpatterns = [
         view=booking_views.PagoListCreateAPIView.as_view(),
         name='booking-pago-list'
     ),
+]
+
+urlpatterns += [
+    path(
+        route='accounts/login',
+        view=accounts_views.login
+    ),
+    path(
+        route='accounts/signup',
+        view=accounts_views.signup
+    ),
+    path(
+        route='accounts/test-token',
+        view=accounts_views.test_token
+    )
 ]

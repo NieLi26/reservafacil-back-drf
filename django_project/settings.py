@@ -56,6 +56,7 @@ THIRDY_PARTY_APPS = [
     # 'django_crontab',
     "corsheaders",
     'rest_framework',
+    'rest_framework.authtoken',
     'django_browser_reload',  # dev
 ]
 
