@@ -1,3 +1,5 @@
+import datetime
+import random
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.http import HttpResponse
 from django.db.models import Q
@@ -75,3 +77,15 @@ def validar_cita_confirmada(id):
     except Exception as e:
         print(str(e))
     return False
+
+
+# def generar_numero_random(cantidad_digitos):
+#     fecha_hora_actual = datetime.datetime.now()
+#     numero = fecha_hora_actual.strftime('%Y%m%d%H%M%S')
+
+#     # Verifica si se necesitan dígitos adicionales
+#     digitos_faltantes = cantidad_digitos - len(numero)
+#     if digitos_faltantes > 0:
+#         numero += ''.join(random.choice('0123456789') for _ in range(digitos_faltantes))
+
+#     return numero

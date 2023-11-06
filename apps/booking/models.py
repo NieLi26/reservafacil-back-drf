@@ -1,3 +1,4 @@
+import random
 from django.db import models
 from django.db.models import Q
 from datetime import timedelta, datetime, time
@@ -285,6 +286,7 @@ class Cita(TimeStampedModel):
                               default=Estados.RESERVADA)
     obs = models.TextField(blank=True)
     realizada = models.BooleanField(default=False)
+    numero_cita = models.CharField(max_length=6, blank=True)
 
     class Meta:
         '''Meta definition for Cita.'''
@@ -295,6 +297,27 @@ class Cita(TimeStampedModel):
 
     def __str__(self):
         return self.cliente.rut
+
+    def save(self, *args, **kwargs):
+        if not self.numero_cita:
+            self.numero_cita = self.generar_numero_random(6)
+        super(Cita, self).save(*args, **kwargs)
+
+    def generar_numero_random(self, cantidad_digitos):
+        if cantidad_digitos < 1:
+            raise ValueError("La cantidad de dígitos debe ser al menos 1")
+        
+        fecha_hora_actual = datetime.now()
+        numero = fecha_hora_actual.strftime('%Y%m%d%H%M%S')
+
+        if cantidad_digitos <= len(numero):
+            return numero[-cantidad_digitos:]
+
+        # Genera dígitos aleatorios adicionales para completar la cantidad de dígitos deseada
+        digitos_faltantes = cantidad_digitos - len(numero)
+        numero += ''.join(random.choice('0123456789') for _ in range(digitos_faltantes))
+
+        return numero
 
     def get_data(self):
         return {

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from datetime import datetime, timedelta, date
+from apps.accounts.serializers import EspecialistaProfileSerializer
 from .models import (
     Tarifa, Categoria, Cliente,
     Especialidad, Horario,
@@ -232,15 +233,17 @@ class CitaCreateSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data['id'] = instance.id
         data['cliente'] = ClienteSerializer(instance.cliente).data
-        data['especialista'] = {
-            'id': instance.especialista.id,
-            'nombre': instance.especialista.user.username
-        }
+        data['especialista'] = EspecialistaProfileSerializer(instance.especialista).data
+        # data['especialista'] = {
+        #     'id': instance.especialista.id,
+        #     'nombre': instance.especialista.user.username
+        # }
         data['fecha'] = instance.fecha.strftime('%d/%m/%Y')
         data['hora'] = instance.hora.strftime("%H:%M")
         data['estado'] = instance.estado
         data['motivo_anulacion'] = instance.historiales_anulacion.first().motivo if instance.historiales_anulacion.first() else ''
         data['realizada'] = instance.realizada
+        data['numero_cita'] = instance.numero_cita
         return data
     
 

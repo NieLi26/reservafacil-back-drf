@@ -6,8 +6,10 @@ from django.db.models import Q, F  # Global search
 from django.views.generic import View
 
 from rest_framework.views import APIView
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 
@@ -15,6 +17,7 @@ from apps.booking.utils import (
     validar_citas_cliente_fecha,
     validar_cita_confirmada
 )
+
 from apps.booking.mixins import PaginationMixin, CustomUserPassesTestMixin
 from apps.accounts.models import EspecialistaProfile, Especialista
 from apps.accounts.forms import EspecialistaProfileForm, EspecialistaCreationForm, EspecialistaChangeForm
@@ -31,26 +34,12 @@ from apps.booking.serializers import (
     CitaCreateSerializer, HistorialAnulacionSerializer
 )
 
+from apps.core.mixins import PaginationMixins
+
 from apps.accounts.serializers import EspecialistaCreateSerializer
 
 from apps.accounts.models import EspecialistaProfile
 
-
-class PaginationMixins(PageNumberPagination):
-    page_size = 2
-
-    def get_paginated_response(self, data):
-        return {
-            'number': self.page.number,
-            'total_pages': self.page.paginator.num_pages,
-            'has_previous': self.page.has_previous(),
-            'has_next': self.page.has_next(),
-            'paginate_by': self.page_size,
-            'total_results': self.page.paginator.count,
-            'start_index': self.page.start_index(),
-            'end_index': self.page.end_index(),
-            'results': data
-        }
 
     # def get_paginated_response(self, data):
     #     return {
@@ -96,9 +85,12 @@ class PaginationMixins(PageNumberPagination):
 #             return paginator.get_paginated_response(serializer.data)
 #         return Response({'detail': "Not content"}, status=status.HTTP_200_OK)
 
+class PublicViewMixin(APIView):
+    permission_classes = (AllowAny, )
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])
 def categorias_json(request):
     status_res = status.HTTP_200_OK
     # categorias = Categoria.objects.all()
@@ -110,6 +102,23 @@ def categorias_json(request):
         response = {"msg": 'Error inesperado, Intente mas tarde'}
         status_res = status.HTTP_500_INTERNAL_SERVER_ERROR
     return Response(response, status=status_res)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def especialidades_json(request):
+    try:
+        categoria = request.GET.get('categoria')
+        print(categoria)
+        especialidades = Especialidad.objects.all()
+        if categoria and categoria != '999':
+            especialidades = especialidades.filter(categoria=categoria)
+        data = list(especialidades.values('id', 'nombre'))
+        return Response(data, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(str(e))
+        data = {"msg": 'Error inesperado, Intente mas tarde'}
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])
@@ -127,7 +136,7 @@ def tarifas_json(request):
 
 
 @api_view(['GET'])
-def especialistas_json(request):
+def especialistas_profile_json(request):
     status_res = status.HTTP_200_OK
     # categorias = Categoria.objects.all()
     # data = [categoria.get_data() for categoria in categorias]
@@ -140,8 +149,188 @@ def especialistas_json(request):
     return Response(response, status=status_res)
 
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def citas_json(request):
+    rut = request.GET.get('rut')
+    try:
+        citas = Cita.objects.all()
+        if rut:
+            citas = citas.filter(cliente__rut=rut.lower(),
+                                 estado='RS')
+        data = CitaCreateSerializer(citas, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(str(e))
+        data = {"msg": 'Error inesperado, Intente mas tarde'}
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def horarios_especialista_json(request):
+    fecha = None
+    DIAS_SEMANA = {
+        '0': 'LU',
+        '1': 'MA',
+        '2': 'MI',
+        '3': 'JU',
+        '4': 'VI',
+        '5': 'SA',
+        '6': 'DO'
+    }
+    especialista_profile = request.GET.get('especialista')
+    fecha_str = request.GET.get('fecha')
+    try:
+        horarios = Horario.objects.all()
+        # if especialista and fecha_str:
+        #     # Convertimos la cadena a un objeto date y obtenemos el dia de la semana
+        #     fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+        #     dia_semana = DIAS_SEMANA[str(fecha.weekday())]
+        #     especialista = EspecialistaProfile.objects.get(pk=especialista)
+
+        #     horario = Horario.objects.get(especialista=especialista,
+        #                                   dia=dia_semana).get_data(fecha)
+        #     response['data'] = horario
+        if especialista_profile:
+            # especialista = EspecialistaProfile.objects.get(pk=especialista)
+            especialista = EspecialistaProfile.objects.get(pk=especialista_profile)
+            horarios = horarios.filter(especialista=especialista_profile)
+        if fecha_str:
+            # Convertimos la cadena a un objeto date y obtenemos el dia de la semana
+            fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+            dia_semana = DIAS_SEMANA[str(fecha.weekday())]
+            print('Dia de semana: ', dia_semana)
+            horarios = horarios.filter(dia=dia_semana)
+
+            # # Validar la fecha de término del contrato del especialista
+            if fecha and especialista and fecha > especialista.termino_contrato:
+                horarios = []
+        # Hacemos esto para doblar la validacion, y no mostrar horarios al seleccioanr fecha(que nose deberia con la validacion de abajo)
+        # Ademas por seguridad mandamos la fecha de termino contrato, para deshabilitar los dias posteriores
+        data = {
+            'fecha_limite': especialista.termino_contrato,
+            'horarios': [horario.get_data(fecha) for horario in horarios]
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    except Horario.DoesNotExist:
+        print('este horario no existe')
+        data = {"msg": "Este horario no Existe"}
+        return Response(data, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(str(e))
+        data = {"msg": 'Error inesperado, Intente mas tarde'}
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def cliente_rut_json(request, rut):
+    try:
+        cliente = Cliente.objects.get(rut=rut)
+        data = ClienteSerializer(cliente).data
+        return Response(data, status=status.HTTP_200_OK)
+    except Cliente.DoesNotExist:
+        data = {"msg": "Cliente no Existe"}
+        return Response(data, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(str(e))
+        data = {"msg": 'Error inesperado, Intente mas tarde'}
+        return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# @api_view(['POST'])
+# def cambiar_estado_cita_json(request, numero_cita):
+#     try
+    
+#     except
+        # realizar algo
+class CambiarEstadoCitaAPIView(PublicViewMixin):
+    def post(self, request, id):
+        estado = request.data.get('estado')
+        print(estado)
+        try:
+            cita = Cita.objects.get(pk=id)
+            if estado == 'AN':
+                cita.estado = estado
+                cita.save()
+                data = {"msg": "Cita Anulada Correctamente"}
+                return Response(data, status=status.HTTP_200_OK)
+            if estado == 'CF':
+                cita.estado = estado
+                cita.save()
+                data = {"msg": "Cita Confirmada Correctamente"}
+                return Response(data, status=status.HTTP_200_OK)
+            data = {"msg": 'Opcion no Valida'}
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        except Cita.DoesNotExist:
+            data = {"msg": "Cliente no Existe"}
+            return Response(data, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(str(e))
+            data = {"msg": 'Error inesperado, Intente mas tarde'}
+            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AgendarCitaAPIView(PublicViewMixin):
+
+    def post(self, request, *args, **kwargs):
+        try:
+            cliente_serializer = ClienteSerializer(data=request.data)
+            rut = request.data.get('rut').lower()
+            cliente_exist = Cliente.objects.filter(rut=rut)
+            if cliente_exist.exists():
+                cliente_serializer = ClienteSerializer(data=request.data,
+                                                       instance=cliente_exist.first())
+            # especialista_profile = Especialista.objects.get(pk=request.data.get('especialista')).especialistaprofile
+            # request.data['especialista'] = especialista_profile.id
+            cita_serializer = CitaCreateSerializer(data=request.data)
+            cliente_valid = cliente_serializer.is_valid()
+            cita_valid = cita_serializer.is_valid()
+            if cita_valid and cliente_valid:
+                cliente = cliente_serializer.save()
+                cita_serializer.save(cliente=cliente)
+                return Response(cita_serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                errors = {}
+                if not cita_valid:
+                    errors = {**cita_serializer.errors}
+                if not cliente_valid:
+                    errors = {**errors, **cliente_serializer.errors}
+
+                error_messages = []
+                for field, errors in errors.items():
+                    for error in errors:
+                        error_messages.append(f"{field}: {error}")
+                print(error_messages)
+                data = {"msg": error_messages}
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(str(e))
+            data = {"msg": 'Error inesperado, Intente mas tarde'}
+            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ResumenCitaAPIView(PublicViewMixin):
+    def get(self, request, numero_cita):
+        try:
+            cita = Cita.objects.get(numero_cita=numero_cita)
+            serializer = CitaCreateSerializer(cita)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Cita.DoesNotExist:
+            print('El Cita no existe')
+            data = {'msg': 'Cita No Encontrada'}
+            return Response(data, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(str(e))
+            data = {"msg": 'Error inesperado, Intente mas tarde'}
+            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 # ========== TARIFAS ========== |
 class TarifaListCreateAPIView(PaginationMixins, APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
         status_res = status.HTTP_200_OK
 
@@ -462,7 +651,7 @@ class ClienteListCreateAPIView(PaginationMixins, APIView):
             if page is not None:
                 # Serializer tus datos como de costumbre
                 serializer = ClienteSerializer(page, many=True)
-                
+            
                 # Devolver los datos paginados junto con los metadatos
                 response = self.get_paginated_response(serializer.data)
 
@@ -1038,7 +1227,9 @@ class CitaListCreateAPIView(PaginationMixins, APIView):
             citas = citas.filter(cliente__rut=rut.lower(),
                                  estado='RS')
         if estado:
+            print('entro en estado')
             citas = citas.filter(estado__in=estado.split(','))
+            print(citas)
         if realizada:
             if 'T' in realizada and 'F' in realizada:
                 citas = citas
@@ -1079,27 +1270,40 @@ class CitaListCreateAPIView(PaginationMixins, APIView):
         return Response(response, status=status_res)
 
     def post(self, request, *args, **kwargs):
-        status_res = status.HTTP_200_OK
         try:
-            serializer = CitaCreateSerializer(data=request.data, context=request.data)
-            if serializer.is_valid():
-                cita = serializer.save()
-                print(CitaCreateSerializer(cita).data)
-                response = CitaCreateSerializer(cita).data
+            cliente_serializer = ClienteSerializer(data=request.data)
+            rut = request.data.get('rut').lower()
+            cliente_exist = Cliente.objects.filter(rut=rut)
+            if cliente_exist.exists():
+                cliente_serializer = ClienteSerializer(data=request.data,
+                                                       instance=cliente_exist.first())
+            # especialista_profile = Especialista.objects.get(pk=request.data.get('especialista')).especialistaprofile
+            # request.data['especialista'] = especialista_profile.id
+            cita_serializer = CitaCreateSerializer(data=request.data)
+            cliente_valid = cliente_serializer.is_valid()
+            cita_valid = cita_serializer.is_valid()
+            if cita_valid and cliente_valid:
+                cliente = cliente_serializer.save()
+                cita_serializer.save(cliente=cliente)
+                return Response(cita_serializer.data, status=status.HTTP_201_CREATED)
             else:
-                print(serializer.errors)
+                errors = {}
+                if not cita_valid:
+                    errors = {**cita_serializer.errors}
+                if not cliente_valid:
+                    errors = {**errors, **cliente_serializer.errors}
+
                 error_messages = []
-                for field, errors in serializer.errors.items():
+                for field, errors in errors.items():
                     for error in errors:
                         error_messages.append(f"{field}: {error}")
                 print(error_messages)
-                response = {"msg": error_messages}
-                status_res = status.HTTP_400_BAD_REQUEST
+                data = {"msg": error_messages}
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(str(e))
-            response = {"msg": 'Error inesperado, Intente mas tarde'}
-            status_res = status.HTTP_500_INTERNAL_SERVER_ERROR
-        return JsonResponse(response, status=status_res)
+            data = {"msg": 'Error inesperado, Intente mas tarde'}
+            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CitaRetrieveUpdateDestroyAPIView(CustomUserPassesTestMixin, APIView):
@@ -1107,9 +1311,10 @@ class CitaRetrieveUpdateDestroyAPIView(CustomUserPassesTestMixin, APIView):
 
     def get(self, request, *args, **kwargs):
         status_res = status.HTTP_200_OK
-        id = self.kwargs['id']
+        numero_cita = self.kwargs['id']
         try:
-            cita = Cita.objects.get(id=id)
+            # cita = Cita.objects.get(id=id)
+            cita = Cita.objects.get(numero_cita=numero_cita)
             serializer = CitaCreateSerializer(cita)
             response = serializer.data
         except Cita.DoesNotExist:
@@ -1238,12 +1443,11 @@ class EspecialistaListCreateAPIView(PaginationMixins, APIView):
         return Response(response, status=status_res)
 
     def post(self, request, *args, **kwargs):
-        status_res = status.HTTP_200_OK
         try:
             serializer = EspecialistaCreateSerializer(data=request.data, context=request.data)
             if serializer.is_valid():
                 serializer.save()
-                response = serializer.data
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
                 print(serializer.errors)
                 error_messages = []
@@ -1251,10 +1455,9 @@ class EspecialistaListCreateAPIView(PaginationMixins, APIView):
                     for error in errors:
                         error_messages.append(f"{field}: {error}")
                 print(error_messages)
-                response = {"msg": error_messages}
-                status_res = status.HTTP_400_BAD_REQUEST
+                data = {"msg": error_messages}
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             print(str(e))
-            response = {"msg": 'Error inesperado, Intente mas tarde'}
-            status_res = status.HTTP_500_INTERNAL_SERVER_ERROR
-        return JsonResponse(response, status=status_res)
+            data = {"msg": 'Error inesperado, Intente mas tarde'}
+            return Response(data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -4,7 +4,7 @@ from django.urls import path
 from . import views
 from apps.booking.api.v1 import views as booking_views
 from apps.booking.api.v2 import views as booking_views_v2
-
+from apps.accounts.api.v1 import views as accounts_views
 
 app_name = "v2"
 
@@ -117,7 +117,7 @@ urlpatterns += [
     ),
     path(
         route='booking/especialistas',
-        view=booking_views_v2.EspecialistaListCreateAPIView.as_view(),
+        view=accounts_views.EspecialistaListCreateAPIView.as_view(),
         name='booking-especialista-list'
     ),
 ]
@@ -129,13 +129,49 @@ urlpatterns += [
         name='booking-categoria-listado'
     ),
     path(
+        route='booking/especialidades-listado/',
+        view=booking_views_v2.especialidades_json,
+        name='booking-especialidad-listado'
+    ),
+    path(
         route='booking/tarifas-listado/',
         view=booking_views_v2.tarifas_json,
         name='booking-tarifa-listado'
     ),
     path(
-        route='booking/especialistas-listado/',
-        view=booking_views_v2.especialistas_json,
+        route='booking/especialistasprofile-listado/',
+        view=booking_views_v2.especialistas_profile_json,
         name='booking-especialista-listado'
     ),
+    path(
+        route='booking/citas-listado/',
+        view=booking_views_v2.citas_json,
+        name='booking-cita-listado'
+    ),
+    path(
+        route='booking/horarios-especialista-listado/',
+        view=booking_views_v2.horarios_especialista_json,
+        name='booking-horario-especialista-listado'
+    ),
+    path(
+        route='booking/cliente-rut/<str:rut>',
+        view=booking_views_v2.cliente_rut_json,
+        name='booking-cliente-rut'
+    ),
+    path(
+        route='booking/cita-estado/<int:id>',
+        view=booking_views_v2.CambiarEstadoCitaAPIView.as_view(),
+        name='booking-cita-estado'
+    ),
+    path(
+        route='booking/crear-cita/',
+        view=booking_views_v2.AgendarCitaAPIView.as_view(),
+        name='booking-crear-cita'
+    ),
+    path(
+        route='booking/resumen-cita/<int:numero_cita>',
+        view=booking_views_v2.ResumenCitaAPIView.as_view(),
+        name='booking-resumen-cita'
+    ),
+    
 ]

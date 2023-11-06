@@ -1,4 +1,9 @@
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 from apps.booking.api.v1 import views as booking_views
 from apps.accounts.api.v1 import views as accounts_views
 
@@ -74,7 +79,7 @@ urlpatterns = [
         name='booking-horario-list'
     ),
     path(
-        route='booking/horario/json/<str:id>/',
+        route='booking/horario/json/<int:id>/',
         view=booking_views.HorarioRetrieveUpdateDestroyAPIView.as_view(),
         name='booking-horario-detail'
     ),
@@ -99,15 +104,75 @@ urlpatterns = [
 
 urlpatterns += [
     path(
-        route='accounts/login',
-        view=accounts_views.login
+        route='accounts/especialistas-especialidad-listado/',
+        view=accounts_views.especialistas_especialidad_json,
+        name='booking-especialista-especialidad-listado'
     ),
     path(
-        route='accounts/signup',
-        view=accounts_views.signup
+        route='accounts/especialistas/',
+        view=accounts_views.EspecialistaListCreateAPIView.as_view(),
+        name="accounts-especialista-list"
     ),
     path(
-        route='accounts/test-token',
-        view=accounts_views.test_token
-    )
+        route='accounts/especialistas/<int:id>/',
+        view=accounts_views.EspecialistaRetrieveUpdateDestroyAPIView.as_view(),
+        name="accounts-especialista-detail"
+    ),
+
+    # opcion 1 
+    # path(
+    #     route='accounts/login1',
+    #     view=accounts_views.login,
+    #     name='login'
+    # ),
+    # path(
+    #     route='accounts/signup',
+    #     view=accounts_views.signup
+    # ),
+    # path(
+    #     route='accounts/test-token',
+    #     view=accounts_views.test_token
+    # ), 
+    # opcion 2 
+    # path(
+    #     route='accounts/register',
+    #     view=accounts_views.UserRegister.as_view()
+    # ),
+    # path(
+    #     route='accounts/login2',
+    #     view=accounts_views.UserLogin.as_view()
+    # ),
+    # path(
+    #     route='accounts/logout',
+    #     view=accounts_views.UserLogout.as_view()
+    # ),
+    # path(
+    #     route='accounts/user',
+    #     view=accounts_views.UserView.as_view()
+    # ),
+
+    ###### authtoken view DJANGO REST from django world videos ######
+    path(
+        route='accounts/login/',
+        view=obtain_auth_token,
+        name="login"
+    ),
+    path(
+        route='accounts/logout/',
+        view=accounts_views.logout,
+        name="logout"
+    ),
+    path(
+        route='accounts/register/',
+        view=accounts_views.user_register,
+        name="register"
+    ),
+    ###### authtoken viewJWT ######
+    path(
+        route='accounts/usuarios/perfil/',
+        view=accounts_views.UserProfile.as_view(),
+        name="accounts-usuario-perfil"
+    ),
+    path('accounts/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # para logearse y obtener token access y token refresh
+    path('accounts/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # para generara un nuevo token access en base al toke nrefresh
 ]

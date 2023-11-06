@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
-
+from datetime import timedelta
 from environ import Env
 env = Env()
 env.read_env()
@@ -57,6 +57,7 @@ THIRDY_PARTY_APPS = [
     "corsheaders",
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'django_browser_reload',  # dev
 ]
 
@@ -158,9 +159,24 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'booking:dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
+}
 
 # Tailwind
-
 TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     "127.0.0.1",

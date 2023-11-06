@@ -59,3 +59,11 @@
 # obligar a que se escoja un rango de fecha, y no solo una fecha
 # mostrar mensaje correcto de que no hay nada en la tabla(LISTO)
 # ojo con esta linea en reserva de asignar especialidad alguna vez asigno en blanco, porque deja habilitado selecionar una opcion en el select 'citaObj.especialidad = especialidad.options[especialidad.selectedIndex].textContent;'
+
+
+# ver como se realiza la cita
+# arreglar que le token nose actualiza
+# crear el dashboard
+# arreglar que cuando uno se logea lo rediriga a reserva
+# al estar logeado y si quiero a login con al url que no me deje, que me redirija a reserva
+# al acabar el token sion se refresca o se elimina, que me redirija al login
