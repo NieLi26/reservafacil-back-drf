@@ -34,7 +34,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 DEBUG = 'RENDER' not in os.environ
 
 
-ALLOWED_HOSTS = [".reserva-facil-v2-production.up.railway.app", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [".relaxed-scone-1beebd.netlify.app", "localhost", "127.0.0.1"]
 # ALLOWED_HOSTS = ['*']
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -215,6 +215,7 @@ CORS_ALLOWED_ORIGINS = [
     # "http://127.0.0.1:8000",
     "http://127.0.0.1:5173",
     "http://localhost:5173",
+    "https://relaxed-scone-1beebd.netlify.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -223,6 +224,7 @@ CSRF_TRUSTED_ORIGINS = [
     # "http://localhost:8000",
     "http://127.0.0.1:5173",
     "http://localhost:5173",
+    "https://relaxed-scone-1beebd.netlify.app",
 ]
 
 
