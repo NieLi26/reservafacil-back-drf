@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 from pathlib import Path
 from datetime import timedelta
 from environ import Env
@@ -28,11 +29,17 @@ SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = env.str("DEBUG", False)
+# DEBUG = env.str("DEBUG", False)
+
+DEBUG = 'RENDER' not in os.environ
 
 
 ALLOWED_HOSTS = [".reserva-facil-v2-production.up.railway.app", "localhost", "127.0.0.1"]
 # ALLOWED_HOSTS = ['*']
+
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -66,7 +73,7 @@ INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRDY_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    # "whitenoise.middleware.WhiteNoiseMiddleware",  # prod 
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # prod 
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
