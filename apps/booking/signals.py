@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from .utils import send_email_cita
-from .tasks import send_email_cita_task
+# from .tasks import send_email_cita_task
 from .models import Cita, Pago, HistorialAnulacion
 
 
