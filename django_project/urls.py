@@ -25,7 +25,7 @@ urlpatterns = [
     path('api/v2/', include('apps.core.api_urls_v2', namespace='v2')),
     # local Apps
     # path("accounts/", include("apps.accounts.urls")),
-    path("__reload__/", include("django_browser_reload.urls")),  # dev
+    # path("__reload__/", include("django_browser_reload.urls")),  # dev
     path("accounts/", include("django.contrib.auth.urls")),
     path('', include('apps.pages.urls', namespace='pages')),
     path('reserva/', include('apps.booking.urls', namespace='booking')),
